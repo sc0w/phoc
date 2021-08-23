@@ -1,9 +1,9 @@
 #pragma once
 
 #include <stdbool.h>
-#include <wlr/types/wlr_box.h>
 #include <wlr/types/wlr_surface.h>
 #include <wlr/types/wlr_layer_shell_v1.h>
+#include <wlr/util/box.h>
 #include "output.h"
 #include "layer-surface.h"
 
