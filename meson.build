@@ -153,6 +153,7 @@ subdir('src')
 subdir('tests')
 subdir('data')
 subdir('doc')
+subdir('examples')
 
 summary = [
         '',
