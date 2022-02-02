@@ -67,6 +67,7 @@ requires:
     - libupower-glib-dev
     - libupower-glib3
     - upower
+    - libwlroots-dev
     - wx3.0-i18n
     - zlib1g-dev
     - libgudev-1.0-dev
