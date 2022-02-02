@@ -94,7 +94,7 @@ build_scripts:
 
   - git submodule update --init
 #  - scan-build $CHECKERS --html-title="$TITLESCANBUILD" --keep-cc -o html-report meson . _build 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
-  - scan-build $CHECKERS --html-title="$TITLESCANBUILD" --keep-cc -o html-report meson -Dembed-wlroots=enabled --default-library=static _build 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
+  - scan-build $CHECKERS --html-title="$TITLESCANBUILD" --keep-cc -o html-report meson . _build -Dembed-wlroots=disabled -Dxwayland=enabled -Db_coverage=true 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
   - scan-build $CHECKERS --html-title="$TITLESCANBUILD" --keep-cc -o html-report ninja -C _build 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
   - echo "Total time $(($SECONDS / 60)) minutes and $(($SECONDS % 60))" 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
   - echo Errors detected in the build `cat ./html-report/output_${TRAVIS_COMMIT} | grep ' error:' | grep -v "\[" | wc -l` 2>&1 | tee -a ./html-report/output_${TRAVIS_COMMIT}
