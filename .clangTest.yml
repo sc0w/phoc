@@ -1,0 +1,112 @@
+##########################################################
+# THE FOLLOWING LINES IS USED BY docker-build
+##########################################################
+requires:
+  debian:
+    - autoconf
+    - automake
+    - autotools-dev
+    - autopoint
+#    - binutils-dev #make check/distcheck
+    - clang
+    - clang-tools
+    - cmake
+    - cppcheck
+    - debhelper
+    - git
+    - gcr
+    - gir1.2-gcr-3
+    - libgcr-3-dev
+    - libgcr-base-3-1
+    - libgcr-ui-3-1
+#    - kdelibs-bin #make check/distcheck
+    - libboost-dev
+    - libboost-system-dev
+    - libcrypto++-dev
+    - libgd-dev
+    - libgeoip-dev
+    - libglib2.0-dev
+    - libpng-dev
+    - libpulse-dev
+    - libpulse-mainloop-glib0
+    - libpulse0
+    - gir1.2-polkit-1.0
+    - libpolkit-agent-1-0
+    - libpolkit-agent-1-dev
+    - libpolkit-gobject-1-0
+    - libpolkit-gobject-1-dev
+    - libpolkit-qt5-1-1
+    - libsecret-1-0
+    - libsecret-1-dev
+    - libsecret-common
+#    - libqt4-dev #make check/distcheck
+#    - libqt4-dev-bin #make check/distcheck
+    - libreadline-dev
+    - libpam-gnome-keyring
+    - libpam-modules
+    - libpam-modules-bin
+    - libpam-runtime
+    - libpam-systemd
+    - libpam0g
+    - libpam0g-dev
+
+    - libupnp-dev
+    - libwxbase3.0-dev #sid
+    - meson
+    - libfeedback-dev
+    - libgnome-desktop-3-dev
+    - libhandy-1-dev
+    - libnm-dev
+    - pandoc
+    - phoc
+    - pastebinit
+    - gir1.2-upowerglib-1.0
+    - libcpupower1
+    - libupower-glib-dev
+    - libupower-glib3
+    - upower
+    - wx3.0-i18n
+    - zlib1g-dev
+
+variables:
+#  - CPPFLAGS="-Wall -Woverloaded-virtual -Wextra -Wshadow -Wformat-nonliteral -Werror=format-security -Wpointer-arith -Wcast-align -Wmissing-declarations -Wredundant-decls"
+  - CXXFLAGS="-Wall -Woverloaded-virtual -Wextra -Wshadow -Wformat-nonliteral -Werror=format-security -Wpointer-arith -Wcast-align -Wmissing-declarations -Wredundant-decls -Wall -Wcast-align -Wextra -Wformat-nonliteral -Wmissing-declarations -Wmissing-field-initializers -Wpointer-arith -Wredundant-decls -Wshadow -Werror=format-security -Wunused-macros"
+  - CFLAGS="-Wall -Wextra -Wshadow -Wformat-nonliteral -Werror=format-security -Wpointer-arith -Wcast-align -Wmissing-declarations -Wredundant-decls -Wall -Wmissing-prototypes -Wbad-function-cast -Wcast-align -Wextra -Wformat-nonliteral -Wmissing-declarations -Wmissing-field-initializers -Wnested-externs -Wpointer-arith -Wredundant-decls -Wshadow -Wstrict-prototypes -Werror=format-security -Wunused-macros"
+  - 'CHECKERS="
+    -enable-checker deadcode.DeadStores
+    -enable-checker alpha.deadcode.UnreachableCode
+    -enable-checker alpha.core.CastSize
+    -enable-checker alpha.core.CastToStruct
+    -enable-checker alpha.core.IdenticalExpr
+    -enable-checker alpha.core.SizeofPtr
+    -enable-checker alpha.security.ArrayBoundV2
+    -enable-checker alpha.security.MallocOverflow
+    -enable-checker alpha.security.ReturnPtrRange
+    -enable-checker alpha.unix.SimpleStream
+    -enable-checker alpha.unix.cstring.BufferOverlap
+    -enable-checker alpha.unix.cstring.NotNullTerminated
+    -enable-checker alpha.unix.cstring.OutOfBounds
+    -enable-checker alpha.core.FixedAddr"'
+
+before_scripts:
+  - mkdir html-report
+  - cppcheck --xml --output-file=cppcheck.xml --enable=warning,style,performance,portability,information,missingInclude .
+  - cppcheck-htmlreport --title=${REPO_NAME} --file=cppcheck.xml --report-dir=cppcheck-htmlreport
+
+build_scripts:
+#  - mkdir ../clang
+#  - cp -dpR . ../clang
+#  - cd ../clang
+  - cppcheck --enable=warning,style,performance,portability,information,missingInclude .
+  - scan-build $CHECKERS --keep-cc -o html-report meson . _build
+  - scan-build $CHECKERS --keep-cc -o html-report ninja -C _build
+# - tar -zcf phosh_clang_htmlreport.tar.gz phosh_clang_htmlreport
+# - curl -F file=@phosh_clang_htmlreport.tar.gz -F expires=6m -F no_index=true https://api.anonymousfiles.io/ && echo
+#  - cd ../rootdir
+
+after_scripts:
+  - ./gen-index -l 20
+#  - make check
+#  - make distcheck
+#  - make clean
+#  - make distclean
