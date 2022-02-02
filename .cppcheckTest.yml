@@ -1,0 +1,25 @@
+##########################################################
+# THE FOLLOWING LINES IS USED BY docker-build
+##########################################################
+requires:
+  debian:
+    - cppcheck
+    - curl
+    - git
+
+variables:
+  - 'CHECKIDS="warning,style,performance,portability,information,missingInclude"'
+
+build_scripts:
+#  - cppcheck --enable=$CHECKIDS --force -j $CPU_COUNT .
+#  - cppcheck --xml --output-file=cppcheck.xml --enable=$CHECKIDS --force -j $CPU_COUNT . &> /dev/null
+#  - cppcheck-htmlreport --title=${REPO_NAME} --file=cppcheck.xml --report-dir=phosh_cppcheck-htmlreport --source-encoding="iso8859-1" &> /dev/null
+#  - tar -zcf phosh_cppcheck-htmlreport.tar.gz phosh_cppcheck-htmlreport
+#  - curl -F file=@phosh_cppcheck-htmlreport.tar.gz -F expires=6m -F no_index=true https://api.anonymousfiles.io/ && echo
+#
+#after_scripts:
+  - mkdir html-report
+  - cppcheck --xml --output-file=cppcheck.xml --enable=warning,style,performance,portability,information,missingInclude .
+  - cppcheck-htmlreport --title=${REPO_NAME} --file=cppcheck.xml --report-dir=cppcheck-htmlreport
+  - ls -la
+  - ./gen-index -l 20
