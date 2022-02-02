@@ -26,6 +26,7 @@ requires:
     - libgd-dev
     - libgeoip-dev
     - libglib2.0-dev
+    - libinput-dev
     - libpng-dev
     - libpulse-dev
     - libpulse-mainloop-glib0
