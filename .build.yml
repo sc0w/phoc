@@ -23,6 +23,7 @@ requires:
     - libboost-dev
     - libboost-system-dev
     - libcrypto++-dev
+    - libdrm-dev
     - libgd-dev
     - libgeoip-dev
     - libglib2.0-dev
