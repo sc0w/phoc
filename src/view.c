@@ -628,7 +628,7 @@ view_tile(struct roots_view *view, PhocViewTileDirection direction, struct wlr_o
   view_arrange_tiled (view, output);
 }
 
-bool view_center(struct roots_view *view, struct wlr_output *wlr_output) {
+bool view_center(struct roots_view *view, const struct wlr_output *wlr_output) {
         PhocServer *server = phoc_server_get_default ();
 	struct wlr_box box, geom;
 	view_get_box(view, &box);
@@ -1290,7 +1290,7 @@ void view_create_foreign_toplevel_handle(struct roots_view *view) {
  * Returns: The corresponding view
  */
 struct roots_view *
-phoc_view_from_wlr_surface (struct wlr_surface *wlr_surface)
+phoc_view_from_wlr_surface (const struct wlr_surface *wlr_surface)
 {
   PhocServer *server = phoc_server_get_default ();
   PhocDesktop *desktop = server->desktop;
