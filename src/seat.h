@@ -45,6 +45,8 @@ typedef struct _PhocSeat {
   // coordinates of the first touch point if it exists
   int32_t                         touch_id;
   double                          touch_x, touch_y;
+  /* Whether we canceled the touch event to the client */
+  gboolean                        touch_cancelled;
 
   // If the focused layer is set, views cannot receive keyboard focus
   struct wlr_layer_surface_v1    *focused_layer;

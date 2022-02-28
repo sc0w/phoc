@@ -464,17 +464,31 @@ static void
 on_drag_update (PhocGesture *gesture, double lx, double ly, PhocCursor *self)
 {
   PhocCursorPrivate *priv;
+  PhocDraggableLayerSurface *drag_surface;
+  PhocDraggableSurfaceState old, new;
 
   g_assert (PHOC_IS_GESTURE (gesture));
   g_assert (PHOC_IS_CURSOR (self));
   priv = phoc_cursor_get_instance_private (self);
+  drag_surface = priv->drag_surface;
 
   if (!priv->drag_surface)
     return;
 
-  if (phoc_draggable_layer_surface_drag_update (priv->drag_surface, lx, ly) ==
-      PHOC_DRAGGABLE_SURFACE_STATE_DRAGGING) {
-    g_debug ("Gesture accepted - need to cancel client's touch");
+  old = drag_surface->state;
+  new = phoc_draggable_layer_surface_drag_update (drag_surface, lx, ly);
+  if (old != PHOC_DRAGGABLE_SURFACE_STATE_PENDING ||
+      new != PHOC_DRAGGABLE_SURFACE_STATE_DRAGGING) {
+    return;
+  }
+
+  /* Tell the client to cancel gesture */
+  if (phoc_seat_has_touch (self->seat)) {
+    g_debug ("Cancelling drag gesture for %s",
+             phoc_layer_surface_get_namespace(drag_surface->layer_surface));
+    wlr_seat_touch_send_cancel (self->seat->seat,
+                                drag_surface->layer_surface->layer_surface->surface);
+    self->seat->touch_cancelled = TRUE;
   }
 }
 
@@ -920,12 +934,19 @@ phoc_cursor_handle_touch_up (PhocCursor                *self,
   struct wlr_touch_point *point =
     wlr_seat_touch_get_point (self->seat->seat, event->touch_id);
 
-  if (self->seat->touch_id == event->touch_id)
-    self->seat->touch_id = -1;
-
   /* FIXME: need to get x,y from touch point for multitouch */
   handle_gestures_for_event_at (self, self->seat->touch_x, self->seat->touch_y,
                                 PHOC_EVENT_TOUCH_END, event, sizeof (*event));
+
+  if (self->seat->touch_cancelled && point) {
+    wlr_touch_point_destroy (point);
+    g_debug ("Avoiding up due to cancel: %d", wlr_seat_touch_num_points (self->seat->seat));
+    self->seat->touch_cancelled = FALSE;
+    return;
+  }
+
+  if (self->seat->touch_id == event->touch_id)
+    self->seat->touch_id = -1;
 
   if (!point)
     return;
