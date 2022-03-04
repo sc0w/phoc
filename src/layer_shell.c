@@ -21,8 +21,10 @@
 #include "output.h"
 #include "seat.h"
 #include "server.h"
+#include "utils.h"
 
 #define LAYER_SHELL_LAYER_COUNT 4
+
 
 static void apply_exclusive(struct wlr_box *usable_area,
 		uint32_t anchor, int32_t exclusive,
@@ -811,7 +813,6 @@ void handle_layer_shell_surface(struct wl_listener *listener, void *data) {
 	// Temporarily set the layer's current state to client_pending
 	// So that we can easily arrange it
 	struct wlr_layer_surface_v1_state old_state = layer_surface->current;
-	layer_surface->current = layer_surface->client_pending;
 
 	phoc_layer_shell_arrange (output);
 	phoc_layer_shell_update_focus ();
