@@ -611,6 +611,7 @@ main (int argc, char **argv)
   zphoc_draggable_layer_surface_v1_set_exclusive (drag_surface, exclusive);
   zphoc_draggable_layer_surface_v1_set_state (drag_surface,
                                              ZPHOC_DRAGGABLE_LAYER_SURFACE_V1_DRAG_END_STATE_FOLDED);
+  wl_surface_commit (wl_surface);
 
 
   egl_window = wl_egl_window_create (wl_surface, width, height);
