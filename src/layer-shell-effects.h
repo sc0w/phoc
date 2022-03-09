@@ -15,7 +15,6 @@
 
 G_BEGIN_DECLS
 
-
 typedef enum {
   PHOC_LAYER_SHELL_EFFECT_DRAG_FROM_TOP = (ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT |
                                            ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT |
@@ -30,7 +29,6 @@ typedef enum {
                                              ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
                                              ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT)
 } PhocLayerShellEffectDrags;
-
 
 /**
  * PhocDraggableSurfaceState:
@@ -52,27 +50,34 @@ typedef enum {
 G_DECLARE_FINAL_TYPE (PhocLayerShellEffects, phoc_layer_shell_effects, PHOC, LAYER_SHELL_EFFECTS, GObject)
 
 typedef enum _AnimDir {
-        ANIM_DIR_IN = 0,
-        ANIM_DIR_OUT,
+  ANIM_DIR_IN = 0,
+  ANIM_DIR_OUT,
 } PhocAnimDir;
+
+typedef struct _PhocDraggableLayerSurfaceParams {
+  /* Margin when folded / unfolded */
+  int32_t  folded, unfolded;
+  /* Height of exclusive area */
+  uint32_t exclusive;
+  /* When is the sufaced pulled out [0.0, 1.0] */
+  double   threshold;
+} PhocDraggableLayerSurfaceParams;
 
 typedef struct PhocDraggableLayerSurface {
   struct wl_resource *resource;
   PhocLayerSurface *layer_surface;
   PhocLayerShellEffects *layer_shell_effects;
 
+  /* Double buffered params set by the client */
+  PhocDraggableLayerSurfaceParams current;
+  PhocDraggableLayerSurfaceParams pending;
+  
   PhocDraggableSurfaceState state;
   struct {
     int      draggable;
     float    last_x, last_y;
-    /* Margin when folded / unfolded */
-    int32_t  folded, unfolded;
-    /* Height of exclusive area */
-    uint32_t exclusive;
     /* Threshold until drag is recongnized */
     int      pending_threshold;
-    /* When is the sufaced pulled out [0.0, 1.0] */
-    double   threshold;
     /* Slide in/out animation */
     gulong   anim_id;
     float    anim_t;

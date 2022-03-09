@@ -24,9 +24,9 @@
  * Additional effects for layer surfaces.
  */
 struct _PhocLayerShellEffects {
-  GObject parent;
+  GObject             parent;
 
-  guint32 version;
+  guint32             version;
   struct wl_global   *global;
   GSList             *resources;
   GSList             *drag_surfaces;
@@ -47,9 +47,9 @@ static void resource_handle_destroy(struct wl_client *client,
 
 static void
 handle_draggable_layer_surface_set_margins (struct wl_client   *client,
-                                           struct wl_resource *resource,
-                                           int32_t             margin_folded,
-                                           int32_t             margin_unfolded)
+                                            struct wl_resource *resource,
+                                            int32_t             margin_folded,
+                                            int32_t             margin_unfolded)
 {
   PhocDraggableLayerSurface *drag_surface = wl_resource_get_user_data (resource);
 
@@ -61,7 +61,6 @@ handle_draggable_layer_surface_set_margins (struct wl_client   *client,
   g_debug ("Draggable Layer surface margins for %p: %d,%d", drag_surface,
            margin_folded, margin_unfolded);
 
-  /* TODO: Do this when fetching the interface already? */
   switch (drag_surface->layer_surface->layer_surface->current.anchor) {
   case PHOC_LAYER_SHELL_EFFECT_DRAG_FROM_TOP:
     G_GNUC_FALLTHROUGH;
@@ -78,34 +77,27 @@ handle_draggable_layer_surface_set_margins (struct wl_client   *client,
     return;
   }
 
-  drag_surface->drag.folded = margin_folded;
-  drag_surface->drag.unfolded = margin_unfolded;
-
-  /* Update animation end in case it's ongoing to compensate for size changes */
-  if (drag_surface->drag.anim_dir == ANIM_DIR_IN) {
-      drag_surface->drag.anim_end = drag_surface->drag.folded;
-      phoc_draggable_layer_surface_slide (drag_surface, ANIM_DIR_IN);
-  }
+  drag_surface->pending.folded = margin_folded;
+  drag_surface->pending.unfolded = margin_unfolded;
 }
 
 
 static void
 handle_draggable_layer_surface_set_exclusive (struct wl_client   *client,
-                                             struct wl_resource *resource,
-                                             uint32_t            exclusive)
+                                              struct wl_resource *resource,
+                                              uint32_t            exclusive)
 {
   PhocDraggableLayerSurface *drag_surface = wl_resource_get_user_data (resource);
 
   g_assert (PHOC_IS_LAYER_SURFACE (drag_surface->layer_surface));
-
-  drag_surface->drag.exclusive = exclusive;
+  drag_surface->pending.exclusive = exclusive;
 }
 
 
 static void
 handle_draggable_layer_surface_set_threshold (struct wl_client   *client,
-                                             struct wl_resource *resource,
-                                             wl_fixed_t          threshold_f)
+                                              struct wl_resource *resource,
+                                              wl_fixed_t          threshold_f)
 {
   PhocDraggableLayerSurface *drag_surface = wl_resource_get_user_data (resource);
   double threshold;
@@ -117,13 +109,13 @@ handle_draggable_layer_surface_set_threshold (struct wl_client   *client,
   threshold = (threshold < 1.0) ? threshold : 1.0;
   threshold = (threshold > 0.0) ? threshold : 0.0;
 
-  drag_surface->drag.threshold = threshold;
+  drag_surface->pending.threshold = threshold;
 }
 
 static void
 handle_draggable_layer_surface_set_state (struct wl_client *client,
-                                         struct wl_resource *resource,
-                                         uint32_t state)
+                                          struct wl_resource *resource,
+                                          uint32_t state)
 {
   PhocDraggableLayerSurface *drag_surface = wl_resource_get_user_data (resource);
   PhocAnimDir dir;
@@ -221,26 +213,41 @@ surface_handle_commit (struct wl_listener *listener, void *data)
 {
   PhocDraggableLayerSurface *drag_surface =
     wl_container_of(listener, drag_surface, surface_handle_commit);
-
   PhocLayerSurface *layer = drag_surface->layer_surface;
+  gboolean changed = FALSE;
 
   if (layer == NULL)
     return;
 
+  if (drag_surface->current.folded != drag_surface->pending.folded) {
+    drag_surface->current.folded = drag_surface->pending.folded;
+    changed = TRUE;
+  }
+  drag_surface->current.unfolded = drag_surface->pending.unfolded;
+  drag_surface->current.exclusive = drag_surface->pending.exclusive;
+  drag_surface->current.threshold = drag_surface->pending.threshold;
+
+  /* Update animation end in case it's ongoing to compensate for size changes */
+  if (changed && drag_surface->drag.anim_dir == ANIM_DIR_IN) {
+      drag_surface->drag.anim_end = drag_surface->current.folded;
+      phoc_draggable_layer_surface_slide (drag_surface, ANIM_DIR_IN);
+  }
+
+  /* Keep in sync with layer surface geometry changes */
   if (drag_surface->geo.width == layer->geo.width &&
       drag_surface->geo.height == layer->geo.height)
     return;
 
-  g_debug ("Gemoetry changed %dx%d", layer->geo.width, layer->geo.height);
+  g_debug ("Geometry changed %dx%d", layer->geo.width, layer->geo.height);
   drag_surface->geo = layer->geo;
 }
 
 
 static void
 handle_get_draggable_layer_surface (struct wl_client   *client,
-                                   struct wl_resource *layer_shell_effects_resource,
-                                   uint32_t            id,
-                                   struct wl_resource *layer_surface_resource)
+                                    struct wl_resource *layer_shell_effects_resource,
+                                    uint32_t            id,
+                                    struct wl_resource *layer_surface_resource)
 {
   PhocLayerShellEffects *self;
   g_autofree PhocDraggableLayerSurface *drag_surface = NULL;
@@ -282,6 +289,7 @@ handle_get_draggable_layer_surface (struct wl_client   *client,
   }
 
   g_assert (PHOC_IS_LAYER_SURFACE (drag_surface->layer_surface));
+
   drag_surface->surface_handle_commit.notify = surface_handle_commit;
   wl_signal_add (&wlr_surface->events.commit, &drag_surface->surface_handle_commit);
 
@@ -455,8 +463,6 @@ on_render_start (PhocDraggableLayerSurface *self, PhocOutput *output, PhocRender
   case PHOC_LAYER_SHELL_EFFECT_DRAG_FROM_TOP:
     layer->client_pending.margin.top = (int32_t)margin;
     layer->current.margin.top = layer->client_pending.margin.top;
-    layer->client_pending.exclusive_zone = -margin + self->drag.exclusive;
-    layer->current.exclusive_zone = layer->client_pending.exclusive_zone;
     break;
   case PHOC_LAYER_SHELL_EFFECT_DRAG_FROM_BOTTOM:
     layer->client_pending.margin.bottom = (int32_t)margin;
@@ -474,6 +480,9 @@ on_render_start (PhocDraggableLayerSurface *self, PhocOutput *output, PhocRender
     g_assert_not_reached ();
     break;
   }
+
+  layer->client_pending.exclusive_zone = -margin + self->current.exclusive;
+  layer->current.exclusive_zone = layer->client_pending.exclusive_zone;
 
   zphoc_draggable_layer_surface_v1_send_dragged (self->resource, (int32_t)margin);
   phoc_layer_shell_arrange (output);
@@ -511,7 +520,7 @@ phoc_draggable_layer_surface_slide (PhocDraggableLayerSurface *self, PhocAnimDir
   self->drag.anim_t = 0;
   self->drag.anim_start = margin;
   self->drag.anim_dir = anim_dir;
-  self->drag.anim_end = (anim_dir == ANIM_DIR_OUT) ? 0 : self->drag.folded;
+  self->drag.anim_end = (anim_dir == ANIM_DIR_OUT) ? 0 : self->current.folded;
 
   self->state = PHOC_DRAGGABLE_SURFACE_STATE_ANIMATING;
 
@@ -643,8 +652,8 @@ phoc_draggable_layer_surface_drag_update (PhocDraggableLayerSurface *self, doubl
     if (margin >= 0)
       margin = 0;
 
-    if (margin <= self->drag.folded)
-      margin = self->drag.folded;
+    if (margin <= self->current.folded)
+      margin = self->current.folded;
 
     layer->client_pending.margin.top = layer->current.margin.top = margin;
     break;
@@ -653,8 +662,8 @@ phoc_draggable_layer_surface_drag_update (PhocDraggableLayerSurface *self, doubl
     if (margin >= 0)
       margin = 0;
 
-    if (margin <= self->drag.folded)
-      layer->client_pending.margin.bottom = self->drag.folded;
+    if (margin <= self->current.folded)
+      layer->client_pending.margin.bottom = self->current.folded;
 
     layer->client_pending.margin.bottom = layer->current.margin.bottom = margin;
     break;
@@ -663,8 +672,8 @@ phoc_draggable_layer_surface_drag_update (PhocDraggableLayerSurface *self, doubl
     if (margin >= 0)
       margin = 0;
 
-    if (margin <= self->drag.folded)
-      margin = self->drag.folded;
+    if (margin <= self->current.folded)
+      margin = self->current.folded;
 
     layer->client_pending.margin.left = layer->current.margin.left = margin;
     break;
@@ -673,8 +682,8 @@ phoc_draggable_layer_surface_drag_update (PhocDraggableLayerSurface *self, doubl
     if (margin >= 0)
       margin = 0;
 
-    if (margin <= self->drag.folded)
-      margin = self->drag.folded;
+    if (margin <= self->current.folded)
+      margin = self->current.folded;
 
     layer->client_pending.margin.right = layer->current.margin.right = margin;
     break;
@@ -683,7 +692,7 @@ phoc_draggable_layer_surface_drag_update (PhocDraggableLayerSurface *self, doubl
     break;
   }
 
-  layer->client_pending.exclusive_zone = -margin + self->drag.exclusive;
+  layer->client_pending.exclusive_zone = -margin + self->current.exclusive;
   layer->current.exclusive_zone = layer->client_pending.exclusive_zone;
 
   zphoc_draggable_layer_surface_v1_send_dragged (self->resource, margin);
@@ -744,8 +753,8 @@ phoc_draggable_layer_surface_drag_end (PhocDraggableLayerSurface *self, double l
   self->drag.last_y = ly;
   self->drag.pending_threshold = 0;
 
-  g_debug ("%s: %d %f" , __func__, self->drag.folded - margin, self->drag.threshold * self->drag.folded);
-  if ((self->drag.folded - margin) > (self->drag.threshold * self->drag.folded)) {
+  g_debug ("%s: %d %f" , __func__, self->current.folded - margin, self->current.threshold * self->current.folded);
+  if ((self->current.folded - margin) > (self->current.threshold * self->current.folded)) {
     g_debug ("Not pulled far enough, rolling back, margin: %d", margin);
     phoc_draggable_layer_surface_slide (self, ANIM_DIR_IN);
   } else {

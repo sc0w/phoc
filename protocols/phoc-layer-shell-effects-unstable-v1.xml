@@ -85,8 +85,10 @@
 
     <request name="set_margins">
       <description summary="Set the margins">
-        Sets the folded and unfolded margins. For how they are define
+        Sets the folded and unfolded margins. For how they are defined
         refer to margins in the layer-surface protocol.
+
+        Margins are double-buffered, see wl_surface.commit.
       </description>
       <arg name="margin_folded" type="int"/>
       <arg name="margin_unfolded" type="int"/>
@@ -96,6 +98,8 @@
       <description summary="Set the threshold">
         How far the surface needs to be pulled to go from folded to unfolded state.
         Ranges from 0.0 to 1.0.
+
+        Threshold is double-buffered, see wl_surface.commit.
       </description>
       <arg name="threshold" type="fixed"/>
     </request>
@@ -104,6 +108,8 @@
       <description summary="Set the margins">
         Sets the exclusive zone. This is the amount of pixels form the screen
         edge that shouldn't be occluded by other surfaces.
+
+        Exclusive zone is double-buffered, see wl_surface.commit.
       </description>
       <arg name="exclusive" type="uint"/>
     </request>
