@@ -51,8 +51,8 @@ jobs:
         run: |
           export TRAVIS_COMMIT=$GITHUB_SHA
           export TRAVIS_BRANCH=$(echo $GITHUB_REF |cut -d "/" -f3)
-          ./docker-build --name "debian" --config .build.yml --install
-          ./docker-build --name "debian" --verbose --config .build.yml --build scripts
+          ./docker-build --name "debian:experimental" --config .build.yml --install
+          ./docker-build --name "debian:experimental" --verbose --config .build.yml --build scripts
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4
