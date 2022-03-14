@@ -8,6 +8,8 @@
 
 #include "config.h"
 #include "server.h"
+#include "gesture.h"
+#include "gesture-drag.h"
 
 #define _XOPEN_SOURCE 700
 #include <assert.h>
@@ -24,7 +26,6 @@
 #include "view.h"
 #include "xcursor.h"
 
-
 enum {
   PROP_0,
   PROP_SEAT,
@@ -32,8 +33,21 @@ enum {
 };
 static GParamSpec *props[PROP_LAST_PROP];
 
+typedef struct _PhocCursorPrivate {
+  /* Would be good to store on the surface itself */
+  PhocDraggableLayerSurface *drag_surface;
 
-G_DEFINE_TYPE (PhocCursor, phoc_cursor, G_TYPE_OBJECT)
+  GSList *gestures;
+} PhocCursorPrivate;
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (PhocCursor, phoc_cursor, G_TYPE_OBJECT)
+
+static void handle_pointer_motion (struct wl_listener *listener, void *data);
+static void handle_pointer_motion_absolute (struct wl_listener *listener, void *data);
+static void handle_pointer_button (struct wl_listener *listener, void *data);
+static void handle_pointer_axis (struct wl_listener *listener, void *data);
+static void handle_pointer_frame (struct wl_listener *listener, void *data);
 
 static void
 phoc_cursor_set_property (GObject      *object,
@@ -70,6 +84,46 @@ phoc_cursor_get_property (GObject    *object,
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     break;
   }
+}
+
+/**
+ * cursor_gestures_handle_event:
+ *
+ * Let gestures associated with a cursor handle an event.
+ */
+static void
+cursor_gestures_handle_event (PhocCursor *cursor, const PhocEvent *event, double lx, double ly)
+{
+  GSList *gestures = phoc_cursor_get_gestures (cursor);
+
+  if (gestures == NULL)
+    return;
+
+  for (GSList *elem = gestures; elem; elem = elem->next) {
+    PhocGesture *gesture = PHOC_GESTURE (elem->data);
+
+    g_assert (PHOC_IS_GESTURE (gesture));
+    phoc_gesture_handle_event (gesture, event, lx, ly);
+  }
+}
+
+/**
+ * handle_gestures_for_event_at:
+ *
+ * Feed an event that has layout coordinates into the gesture system.
+ */
+static void
+handle_gestures_for_event_at (PhocCursor   *self,
+                              double        lx,
+                              double        ly,
+                              PhocEventType type,
+                              gpointer      wlr_event,
+                              gsize         size)
+{
+  PhocEvent *event;
+
+  event = phoc_event_new (type, wlr_event, size);
+  cursor_gestures_handle_event (self, event, lx, ly);
 }
 
 
@@ -293,11 +347,35 @@ static void
 phoc_cursor_constructed (GObject *object)
 {
   PhocCursor *self = PHOC_CURSOR (object);
+  struct wlr_cursor *wlr_cursor = self->cursor;
 
+  g_assert (self->cursor);
   self->xcursor_manager = wlr_xcursor_manager_create (NULL, PHOC_XCURSOR_SIZE);
   g_assert (self->xcursor_manager);
 
+  wl_signal_add (&wlr_cursor->events.motion, &self->motion);
+  self->motion.notify = handle_pointer_motion;
+
+  wl_signal_add (&wlr_cursor->events.motion_absolute, &self->motion_absolute);
+  self->motion_absolute.notify = handle_pointer_motion_absolute;
+
+  wl_signal_add (&wlr_cursor->events.button, &self->button);
+  self->button.notify = handle_pointer_button;
+
+  wl_signal_add (&wlr_cursor->events.axis, &self->axis);
+  self->axis.notify = handle_pointer_axis;
+
+  wl_signal_add (&wlr_cursor->events.frame, &self->frame);
+  self->frame.notify = handle_pointer_frame;
+
   G_OBJECT_CLASS (phoc_cursor_parent_class)->constructed (object);
+}
+
+
+static void
+free_gestures (GSList *gestures)
+{
+  g_slist_free_full (gestures, g_object_unref);
 }
 
 
@@ -305,6 +383,9 @@ static void
 phoc_cursor_finalize (GObject *object)
 {
   PhocCursor *self = PHOC_CURSOR (object);
+  PhocCursorPrivate *priv = phoc_cursor_get_instance_private (self);
+
+  g_clear_pointer (&priv->gestures, free_gestures);
 
   wl_list_remove (&self->motion.link);
   wl_list_remove (&self->motion_absolute.link);
@@ -355,10 +436,115 @@ phoc_cursor_class_init (PhocCursorClass *klass)
 
 
 static void
+on_drag_begin (PhocGesture *gesture, double lx, double ly, PhocCursor *self)
+{
+  PhocDesktop *desktop = phoc_server_get_default ()->desktop;
+  PhocLayerSurface *layer_surface;
+  PhocCursorPrivate *priv = phoc_cursor_get_instance_private (self);
+  PhocDraggableLayerSurface *drag_surface;
+
+  g_assert (PHOC_IS_GESTURE (gesture));
+  g_assert (PHOC_IS_CURSOR (self));
+
+  priv->drag_surface = NULL;
+  layer_surface = phoc_desktop_layer_surface_at (desktop, lx, ly, NULL, NULL);
+  if (!layer_surface)
+    return;
+
+  drag_surface = phoc_desktop_get_draggable_layer_surface (desktop, layer_surface);
+  if (!drag_surface)
+    return;
+
+  phoc_draggable_layer_surface_drag_start (drag_surface, lx, ly);
+  priv->drag_surface = drag_surface;
+}
+
+
+static void
+on_drag_update (PhocGesture *gesture, double lx, double ly, PhocCursor *self)
+{
+  PhocCursorPrivate *priv;
+  PhocDraggableLayerSurface *drag_surface;
+  PhocDraggableSurfaceState old, new;
+
+  g_assert (PHOC_IS_GESTURE (gesture));
+  g_assert (PHOC_IS_CURSOR (self));
+  priv = phoc_cursor_get_instance_private (self);
+  drag_surface = priv->drag_surface;
+
+  if (!priv->drag_surface)
+    return;
+
+  old = drag_surface->state;
+  new = phoc_draggable_layer_surface_drag_update (drag_surface, lx, ly);
+  if (old != PHOC_DRAGGABLE_SURFACE_STATE_PENDING ||
+      new != PHOC_DRAGGABLE_SURFACE_STATE_DRAGGING) {
+    return;
+  }
+
+  /* Tell the client to cancel gesture */
+  if (phoc_seat_has_touch (self->seat)) {
+    g_debug ("Cancelling drag gesture for %s",
+             phoc_layer_surface_get_namespace(drag_surface->layer_surface));
+    wlr_seat_touch_send_cancel (self->seat->seat,
+                                drag_surface->layer_surface->layer_surface->surface);
+    self->seat->touch_cancelled = TRUE;
+  }
+}
+
+
+static void
+on_drag_end (PhocGesture *gesture, double lx, double ly, PhocCursor *self)
+{
+  PhocCursorPrivate *priv;
+
+  g_assert (PHOC_IS_GESTURE (gesture));
+  g_assert (PHOC_IS_CURSOR (self));
+  priv = phoc_cursor_get_instance_private (self);
+
+  if (!priv->drag_surface)
+    return;
+
+  phoc_draggable_layer_surface_drag_end (priv->drag_surface, lx, ly);
+}
+
+
+static void
+on_drag_cancel (PhocGesture *gesture, PhocCursor *self)
+{
+  PhocCursorPrivate *priv = phoc_cursor_get_instance_private (self);
+
+  g_assert (PHOC_IS_GESTURE (gesture));
+  g_assert (PHOC_IS_CURSOR (self));
+  priv = phoc_cursor_get_instance_private (self);
+
+  if (!priv->drag_surface)
+    return;
+
+  /* Nothing to do here yet */
+  g_debug ("%s", __func__);
+}
+
+
+static void
 phoc_cursor_init (PhocCursor *self)
 {
+  g_autoptr (PhocGesture) gesture = NULL;
+
   self->cursor = wlr_cursor_create ();
   self->default_xcursor = PHOC_XCURSOR_DEFAULT;
+
+  /*
+   * Drag gesture starting at the current cursor position
+   */
+  gesture = PHOC_GESTURE (phoc_gesture_drag_new ());
+  g_object_connect (gesture,
+                    "signal::drag-begin", on_drag_begin, self,
+                    "signal::drag-update", on_drag_update, self,
+                    "signal::drag-end", on_drag_end, self,
+                    "signal::cancel", on_drag_cancel, self,
+                    NULL);
+  phoc_cursor_add_gesture (self, gesture);
 }
 
 
@@ -526,16 +712,21 @@ phoc_cursor_press_button (PhocCursor *self,
   }
 }
 
-void
-phoc_cursor_handle_motion (PhocCursor                      *self,
-                           struct wlr_event_pointer_motion *event)
+
+static void
+handle_pointer_motion (struct wl_listener *listener, void *data)
 {
+  PhocCursor *self = wl_container_of (listener, self, motion);
+  struct wlr_event_pointer_motion *event = data;
   PhocServer *server = phoc_server_get_default ();
+  PhocDesktop *desktop = server->desktop;
   double dx = event->delta_x;
   double dy = event->delta_y;
 
   double dx_unaccel = event->unaccel_dx;
   double dy_unaccel = event->unaccel_dy;
+
+  wlr_idle_notify_activity (desktop->idle, self->seat->seat);
 
   wlr_relative_pointer_manager_v1_send_relative_motion (
     server->desktop->relative_pointer_manager,
@@ -572,18 +763,23 @@ phoc_cursor_handle_motion (PhocCursor                      *self,
   phoc_cursor_update_position (self, event->time_msec);
 }
 
-void
-phoc_cursor_handle_motion_absolute (PhocCursor                               *self,
-                                    struct wlr_event_pointer_motion_absolute *event)
+static void
+handle_pointer_motion_absolute (struct wl_listener *listener, void *data)
 {
+  PhocCursor *self = wl_container_of (listener, self, motion_absolute);
+  struct wlr_event_pointer_motion_absolute *event = data;
   PhocServer *server = phoc_server_get_default ();
+  PhocDesktop *desktop = server->desktop;
   double lx, ly;
 
+  wlr_idle_notify_activity (desktop->idle, self->seat->seat);
   wlr_cursor_absolute_to_layout_coords (self->cursor, event->device, event->x,
                                         event->y, &lx, &ly);
 
   double dx = lx - self->cursor->x;
   double dy = ly - self->cursor->y;
+
+  handle_gestures_for_event_at (self, lx, ly, PHOC_EVENT_MOTION_NOTIFY, event, sizeof (*event));
 
   wlr_relative_pointer_manager_v1_send_relative_motion (
     server->desktop->relative_pointer_manager,
@@ -603,25 +799,68 @@ phoc_cursor_handle_motion_absolute (PhocCursor                               *se
   phoc_cursor_update_position (self, event->time_msec);
 }
 
-void
-phoc_cursor_handle_button (PhocCursor                      *self,
-                           struct wlr_event_pointer_button *event)
+static void
+handle_pointer_button (struct wl_listener *listener, void *data)
 {
+  PhocCursor *self = wl_container_of (listener, self, button);
+  struct wlr_event_pointer_button *event = data;
+  PhocServer *server = phoc_server_get_default ();
+  PhocDesktop *desktop = server->desktop;
+  PhocEventType type;
+  bool is_touch = event->device->type == WLR_INPUT_DEVICE_TOUCH;
+
+  wlr_idle_notify_activity (desktop->idle, self->seat->seat);
+  g_debug ("%s %d is_touch: %d", __func__, __LINE__, is_touch);
+  if (!is_touch) {
+    type = event->state ? PHOC_EVENT_BUTTON_PRESS : PHOC_EVENT_BUTTON_RELEASE;
+    handle_gestures_for_event_at (self, self->cursor->x, self->cursor->y, type, event, sizeof (*event));
+  }
+
   phoc_cursor_press_button (self, event->device, event->time_msec,
                             event->button, event->state, self->cursor->x, self->cursor->y);
 }
 
+/**
+ * phoc_cursor_handle_event:
+ * @self: The phoc cursor
+ * @type: The event type
+ * @event: The event
+ * @size: The size of the event
+ *
+ * Feed an event that happened at the cursor coordinates of type `type`
+ * to the event system. This gives all gestures that are registered in the compositor
+ * a chance to handle the event.
+ */
 void
-phoc_cursor_handle_axis (PhocCursor                    *self,
-                         struct wlr_event_pointer_axis *event)
+phoc_cursor_handle_event (PhocCursor   *self,
+                          PhocEventType type,
+                          gpointer      event,
+                          gsize         size)
 {
+  handle_gestures_for_event_at (self, self->cursor->x, self->cursor->y, type, event, size);
+}
+
+static void
+handle_pointer_axis (struct wl_listener *listener, void *data)
+{
+  PhocCursor *self = wl_container_of (listener, self, axis);
+  struct wlr_event_pointer_axis *event = data;
+  PhocServer *server = phoc_server_get_default ();
+  PhocDesktop *desktop = server->desktop;
+
+  wlr_idle_notify_activity (desktop->idle, self->seat->seat);
   wlr_seat_pointer_notify_axis (self->seat->seat, event->time_msec,
                                 event->orientation, event->delta, event->delta_discrete, event->source);
 }
 
-void
-phoc_cursor_handle_frame (PhocCursor *self)
+static void
+handle_pointer_frame (struct wl_listener *listener, void *data)
 {
+  PhocCursor *self = wl_container_of (listener, self, frame);
+  PhocServer *server = phoc_server_get_default ();
+  PhocDesktop *desktop = server->desktop;
+
+  wlr_idle_notify_activity (desktop->idle, self->seat->seat);
   wlr_seat_pointer_notify_frame (self->seat->seat);
 }
 
@@ -636,6 +875,8 @@ phoc_cursor_handle_touch_down (PhocCursor                  *self,
 
   wlr_cursor_absolute_to_layout_coords (self->cursor, event->device,
                                         event->x, event->y, &lx, &ly);
+
+  handle_gestures_for_event_at (self, lx, ly, PHOC_EVENT_TOUCH_BEGIN, event, sizeof (*event));
 
   if (seat->touch_id == -1 && self->mode == PHOC_CURSOR_PASSTHROUGH) {
     seat->touch_id = event->touch_id;
@@ -659,10 +900,11 @@ phoc_cursor_handle_touch_down (PhocCursor                  *self,
       phoc_seat_set_focus (seat, view);
 
     if (wlr_surface_is_layer_surface (surface)) {
-      struct wlr_layer_surface_v1 *layer =
-        wlr_layer_surface_v1_from_wlr_surface (surface);
-      if (layer->current.keyboard_interactive) {
-        phoc_seat_set_focus_layer (seat, layer);
+      struct wlr_layer_surface_v1 *wlr_layer = wlr_layer_surface_v1_from_wlr_surface (surface);
+
+      /* TODO: Use press gesture */
+      if (wlr_layer->current.keyboard_interactive) {
+          phoc_seat_set_focus_layer (seat, wlr_layer);
       }
     }
   }
@@ -692,6 +934,17 @@ phoc_cursor_handle_touch_up (PhocCursor                *self,
   struct wlr_touch_point *point =
     wlr_seat_touch_get_point (self->seat->seat, event->touch_id);
 
+  /* FIXME: need to get x,y from touch point for multitouch */
+  handle_gestures_for_event_at (self, self->seat->touch_x, self->seat->touch_y,
+                                PHOC_EVENT_TOUCH_END, event, sizeof (*event));
+
+  if (self->seat->touch_cancelled && point) {
+    wlr_touch_point_destroy (point);
+    g_debug ("Avoiding up due to cancel: %d", wlr_seat_touch_num_points (self->seat->seat));
+    self->seat->touch_cancelled = FALSE;
+    return;
+  }
+
   if (self->seat->touch_id == event->touch_id)
     self->seat->touch_id = -1;
 
@@ -716,13 +969,14 @@ phoc_cursor_handle_touch_motion (PhocCursor                    *self,
   struct wlr_touch_point *point =
     wlr_seat_touch_get_point (self->seat->seat, event->touch_id);
 
+  double lx, ly;
+  wlr_cursor_absolute_to_layout_coords (self->cursor, event->device,
+                                        event->x, event->y, &lx, &ly);
+  handle_gestures_for_event_at (self, lx, ly, PHOC_EVENT_TOUCH_UPDATE, event, sizeof (*event));
+
   if (!point)
     return;
 
-  double lx, ly;
-
-  wlr_cursor_absolute_to_layout_coords (self->cursor, event->device,
-                                        event->x, event->y, &lx, &ly);
   struct wlr_output *wlr_output =
     wlr_output_layout_output_at (desktop->layout, lx, ly);
 
@@ -988,4 +1242,43 @@ phoc_cursor_new (PhocSeat *seat)
   return PHOC_CURSOR (g_object_new (PHOC_TYPE_CURSOR,
 				    "seat", seat,
 				    NULL));
+}
+
+
+/**
+ * phoc_cursor_add_gesture:
+ * @self: The cursor
+ * @gesture: A gesture
+ *
+ * Adds a gesture to the list of gestures handle by @self.
+ */
+void
+phoc_cursor_add_gesture (PhocCursor   *self,
+                         PhocGesture  *gesture)
+{
+  PhocCursorPrivate *priv;
+
+  g_assert (PHOC_IS_CURSOR (self));
+  priv = phoc_cursor_get_instance_private (self);
+
+  priv->gestures = g_slist_append (priv->gestures, g_object_ref (gesture));
+}
+
+
+/**
+ * phoc_cursor_get_gestures:
+ * @self: The Cursor
+ *
+ * Gets the currently registered gestures @self.
+ * Returns: (transfer none) (nullable): The cursor's gestures
+ */
+GSList *
+phoc_cursor_get_gestures (PhocCursor *self)
+{
+  PhocCursorPrivate *priv;
+
+  g_assert (PHOC_IS_CURSOR (self));
+  priv = phoc_cursor_get_instance_private (self);
+
+  return priv->gestures;
 }
