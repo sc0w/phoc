@@ -396,9 +396,9 @@ const struct wl_seat_listener seat_listener = {
 
 
 static void
-drag_surface_handle_drag_end (void                                          *data,
-                              const struct zphoc_draggable_layer_surface_v1 *drag_surface_,
-                              uint32_t                                       state)
+drag_surface_handle_drag_end (void                                    *data,
+                              struct zphoc_draggable_layer_surface_v1 *drag_surface_,
+                              uint32_t                                 state)
 {
   g_assert (drag_surface_ == drag_surface);
 
@@ -410,9 +410,9 @@ drag_surface_handle_drag_end (void                                          *dat
 
 
 static void
-drag_surface_handle_dragged (void                                          *data,
-                             const struct zphoc_draggable_layer_surface_v1 *drag_surface_,
-                             int32_t                                        margin)
+drag_surface_handle_dragged (void                                    *data,
+                             struct zphoc_draggable_layer_surface_v1 *drag_surface_,
+                             int32_t                                  margin)
 {
   g_assert (drag_surface_ == drag_surface);
 
@@ -421,7 +421,7 @@ drag_surface_handle_dragged (void                                          *data
 }
 
 
-const struct zphoc_draggable_layer_surface_v1_listener drag_surface_listener = {
+struct zphoc_draggable_layer_surface_v1_listener drag_surface_listener = {
   .drag_end = drag_surface_handle_drag_end,
   .dragged = drag_surface_handle_dragged,
 };
