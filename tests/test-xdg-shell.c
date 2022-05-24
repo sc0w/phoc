@@ -5,17 +5,7 @@
  */
 
 #include "testlib.h"
-
-typedef struct _PhocTestXdgToplevelSurface
-{
-  struct wl_surface *wl_surface;
-  struct xdg_surface *xdg_surface;
-  struct xdg_toplevel *xdg_toplevel;
-  PhocTestBuffer buffer;
-  guint32 width, height;
-  gboolean configured;
-  gboolean toplevel_configured;
-} PhocTestXdgToplevelSurface;
+#include "test-xdg-shell.h"
 
 static void
 xdg_surface_handle_configure(void *data, struct xdg_surface *xdg_surface,
@@ -34,6 +24,8 @@ static const struct xdg_surface_listener xdg_surface_listener = {
 
 #define WIDTH 100
 #define HEIGHT 200
+
+#define XDGSHELL
 
 static void
 xdg_toplevel_handle_configure(void *data, struct xdg_toplevel *xdg_toplevel,
@@ -61,7 +53,7 @@ static const struct xdg_toplevel_listener xdg_toplevel_listener = {
 	xdg_toplevel_handle_close,
 };
 
-static void
+void
 phoc_test_xdg_surface_free (PhocTestXdgToplevelSurface *xs)
 {
   xdg_toplevel_destroy (xs->xdg_toplevel);
@@ -71,25 +63,30 @@ phoc_test_xdg_surface_free (PhocTestXdgToplevelSurface *xs)
   g_free (xs);
 }
 
-static PhocTestXdgToplevelSurface *
+PhocTestXdgToplevelSurface *
 phoc_test_xdg_surface_new (PhocTestClientGlobals *globals,
-			   guint32 width, guint32 height, guint32 color)
+			   guint32 width, guint32 height, char* title, guint32 color)
 {
   PhocTestXdgToplevelSurface *xs = g_malloc0 (sizeof(PhocTestXdgToplevelSurface));
 
   xs->wl_surface = wl_compositor_create_surface (globals->compositor);
   g_assert_nonnull (xs->wl_surface);
 
-    xs->xdg_surface = xdg_wm_base_get_xdg_surface (globals->xdg_shell,
-						   xs->wl_surface);
+  xs->xdg_surface = xdg_wm_base_get_xdg_surface (globals->xdg_shell,
+						 xs->wl_surface);
   g_assert_nonnull (xs->wl_surface);
   xdg_surface_add_listener (xs->xdg_surface,
 			    &xdg_surface_listener, xs);
-    xs->xdg_toplevel = xdg_surface_get_toplevel (xs->xdg_surface);
+  xs->xdg_toplevel = xdg_surface_get_toplevel (xs->xdg_surface);
   g_assert_nonnull (xs->xdg_toplevel);
   xdg_toplevel_add_listener (xs->xdg_toplevel,
 			     &xdg_toplevel_listener, xs);
   xdg_toplevel_set_min_size (xs->xdg_toplevel, WIDTH, HEIGHT);
+
+  if (title) {
+    xs->title = title;
+    xdg_toplevel_set_title (xs->xdg_toplevel, xs->title);
+  }
 
   wl_surface_commit (xs->wl_surface);
   wl_display_dispatch (globals->display);
@@ -110,6 +107,11 @@ phoc_test_xdg_surface_new (PhocTestClientGlobals *globals,
   wl_display_dispatch (globals->display);
   wl_display_roundtrip (globals->display);
 
+  if (title) {
+    xs->foreign_toplevel = phoc_test_client_get_foreign_toplevel_handle (globals, title);
+    g_assert_true (xs->foreign_toplevel);
+  }
+
   return xs;
 }
 
@@ -118,7 +120,7 @@ test_client_xdg_shell_normal (PhocTestClientGlobals *globals, gpointer data)
 {
   PhocTestXdgToplevelSurface *ls_green;
 
-  ls_green = phoc_test_xdg_surface_new (globals, WIDTH, HEIGHT, 0xFF00FF00);
+  ls_green = phoc_test_xdg_surface_new (globals, WIDTH, HEIGHT, NULL, 0xFF00FF00);
   g_assert_nonnull (ls_green);
   phoc_assert_screenshot (globals, "test-xdg-shell-normal-1.png");
 
@@ -133,7 +135,7 @@ test_client_xdg_shell_maximized (PhocTestClientGlobals *globals, gpointer data)
 {
   PhocTestXdgToplevelSurface *ls_green;
 
-  ls_green = phoc_test_xdg_surface_new (globals, WIDTH, HEIGHT, 0xFF00FF00);
+  ls_green = phoc_test_xdg_surface_new (globals, WIDTH, HEIGHT, NULL, 0xFF00FF00);
   g_assert_nonnull (ls_green);
   phoc_assert_screenshot (globals, "test-xdg-shell-maximized-1.png");
 
@@ -181,7 +183,16 @@ main (gint argc, gchar *argv[])
 {
   g_test_init (&argc, &argv, NULL);
 
+#ifdef XDGSHELL
   g_test_add_func("/phoc/xdg-shell/simple", test_xdg_shell_normal);
   g_test_add_func("/phoc/xdg-shell/maximize", test_xdg_shell_maximized);
+#undef XDGSHELL
+#else
+  g_test_add_func ("/phoc/phosh/thumbnail/simple", test_phosh_private_thumbnail_simple);
+  g_test_add_func ("/phoc/phosh/kbevents/simple", test_phosh_private_kbevents_simple);
+  g_test_add_func ("/phoc/phosh/startup-tracker/simple", test_phosh_private_startup_tracker_simple);
+#endif
+
   return g_test_run();
 }
+
