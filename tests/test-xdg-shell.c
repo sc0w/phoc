@@ -25,8 +25,6 @@ static const struct xdg_surface_listener xdg_surface_listener = {
 #define WIDTH 100
 #define HEIGHT 200
 
-#define XDGSHELL
-
 static void
 xdg_toplevel_handle_configure(void *data, struct xdg_toplevel *xdg_toplevel,
 			      int32_t width, int32_t height,
@@ -183,15 +181,11 @@ main (gint argc, gchar *argv[])
 {
   g_test_init (&argc, &argv, NULL);
 
-#ifdef XDGSHELL
   g_test_add_func("/phoc/xdg-shell/simple", test_xdg_shell_normal);
   g_test_add_func("/phoc/xdg-shell/maximize", test_xdg_shell_maximized);
-#undef XDGSHELL
-#else
   g_test_add_func ("/phoc/phosh/thumbnail/simple", test_phosh_private_thumbnail_simple);
   g_test_add_func ("/phoc/phosh/kbevents/simple", test_phosh_private_kbevents_simple);
   g_test_add_func ("/phoc/phosh/startup-tracker/simple", test_phosh_private_startup_tracker_simple);
-#endif
 
   return g_test_run();
 }
