@@ -179,14 +179,19 @@ test_xdg_shell_maximized (void)
 gint
 main (gint argc, gchar *argv[])
 {
+  static gboolean initialized = FALSE;
+
   g_test_init (&argc, &argv, NULL);
 
+  if (!initialized) {
   g_test_add_func("/phoc/xdg-shell/simple", test_xdg_shell_normal);
   g_test_add_func("/phoc/xdg-shell/maximize", test_xdg_shell_maximized);
+  initialized = TRUE
+  }  else {
   g_test_add_func ("/phoc/phosh/thumbnail/simple", test_phosh_private_thumbnail_simple);
   g_test_add_func ("/phoc/phosh/kbevents/simple", test_phosh_private_kbevents_simple);
   g_test_add_func ("/phoc/phosh/startup-tracker/simple", test_phosh_private_startup_tracker_simple);
-
+  }
   return g_test_run();
 }
 
