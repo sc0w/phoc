@@ -36,7 +36,6 @@ tests = [
 phoctest_sources = [
   'testlib.c',
   'testlib-layer-shell.c',
-  'test-xdg-shell.c',
 ]
 
 phoctest_lib = static_library('phoctest', phoctest_sources, client_protos_headers,

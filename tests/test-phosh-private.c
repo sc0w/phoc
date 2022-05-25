@@ -6,7 +6,6 @@
 
 #include "testlib.h"
 #include "gtk-shell-client-protocol.h"
-#include "test-xdg-shell.h"
 
 typedef struct _PhocTestThumbnail
 {
@@ -27,9 +26,6 @@ typedef struct _PhocTestKeyboardEvent
   struct phosh_private_keyboard_event *kbevent;
   PhocTestGrabStatus grab_status;
 } PhocTestKeyboardEvent;
-
-#define WIDTH 100
-#define HEIGHT 200
 
 
 static PhocTestScreencopyFrame *
@@ -58,7 +54,7 @@ test_client_phosh_private_thumbnail_simple (PhocTestClientGlobals *globals, gpoi
   PhocTestXdgToplevelSurface *toplevel_green;
   PhocTestScreencopyFrame *green_thumbnail;
 
-  toplevel_green = phoc_test_xdg_surface_new (globals, WIDTH, HEIGHT, "green", 0xFF00FF00);
+  toplevel_green = phoc_test_xdg_toplevel_new (globals, 0, 0, "green", 0xFF00FF00);
   g_assert_nonnull (toplevel_green);
   phoc_assert_screenshot (globals, "test-phosh-private-thumbnail-simple-1.png");
 
@@ -66,7 +62,7 @@ test_client_phosh_private_thumbnail_simple (PhocTestClientGlobals *globals, gpoi
   phoc_assert_buffer_equal (&toplevel_green->buffer, &green_thumbnail->buffer);
   phoc_test_thumbnail_free (green_thumbnail);
 
-  phoc_test_xdg_surface_free (toplevel_green);
+  phoc_test_xdg_toplevel_free (toplevel_green);
   phoc_assert_screenshot (globals, "empty.png");
 
   return TRUE;
@@ -284,4 +280,15 @@ test_phosh_private_startup_tracker_simple (void)
   };
 
   phoc_test_client_run (3, &iface, NULL);
+}
+
+gint
+main (gint argc, gchar *argv[])
+{
+  g_test_init (&argc, &argv, NULL);
+
+  g_test_add_func ("/phoc/phosh/thumbnail/simple", test_phosh_private_thumbnail_simple);
+  g_test_add_func ("/phoc/phosh/kbevents/simple", test_phosh_private_kbevents_simple);
+  g_test_add_func ("/phoc/phosh/startup-tracker/simple", test_phosh_private_startup_tracker_simple);
+  return g_test_run ();
 }
