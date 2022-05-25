@@ -1,0 +1,290 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cppcheck - HTML report - phoc (cppcheck 2.7-1)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+    </style>
+    <script>
+      function getStyle(el, styleProp) {
+        var y;
+
+        if (el.currentStyle) {
+          y = el.currentStyle[styleProp];
+        } else if (window.getComputedStyle) {
+          y = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+        }
+
+        return y;
+      }
+
+      function toggle() {
+        var el = this.expandable_content;
+        var mark = this.expandable_marker;
+
+        if (el.style.display === "block") {
+          el.style.display = "none";
+          mark.textContent = "[+]";
+        } else {
+          el.style.display = "block";
+          mark.textContent = "[-]";
+        }
+      }
+
+      function initExpandables() {
+        var elements = document.querySelectorAll(".expandable");
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          var el = elements[i];
+          var clickable = el.querySelector("span");
+          var marker = clickable.querySelector(".marker");
+          var content = el.querySelector(".content");
+          var width = clickable.clientWidth - parseInt(getStyle(content, "padding-left")) - parseInt(getStyle(content, "padding-right"));
+          content.style.width = width + "px";
+          clickable.expandable_content = content;
+          clickable.expandable_marker = marker;
+          clickable.addEventListener("click", toggle);
+        }
+      }
+
+      function toggleDisplay(cb) {
+        var elements = document.querySelectorAll("." + cb.id);
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          elements[i].classList.toggle("id-filtered", !cb.checked);
+        }
+
+        updateFileRows();
+      }
+
+      function toggleSeverity(cb) {
+        cb.parentElement.classList.toggle("unchecked", !cb.checked);
+        var elements = document.querySelectorAll(".sev_" + cb.id);
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          elements[i].classList.toggle("severity-filtered", !cb.checked);
+        }
+
+        updateFileRows();
+      }
+
+      function toggleTool(cb) {
+        cb.parentElement.classList.toggle("unchecked", !cb.checked);
+
+        var elements;
+        if (cb.id == "clang-tidy")
+            elements = document.querySelectorAll("[class^=clang-tidy-]");
+        else
+            elements = document.querySelectorAll(".issue:not([class^=clang-tidy-])");
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          elements[i].classList.toggle("tool-filtered", !cb.checked);
+        }
+
+        updateFileRows();
+      }
+
+      function toggleAll() {
+        var elements = document.querySelectorAll(".idToggle");
+
+        // starting from 1 since 0 is the "toggle all" input
+        for (var i = 1, len = elements.length; i < len; i++) {
+          var changed = elements[i].checked != elements[0].checked;
+          if (changed) {
+            elements[i].checked = elements[0].checked;
+            toggleDisplay(elements[i]);
+          }
+        }
+      }
+
+      function filterFile(filter) {
+        var elements = document.querySelectorAll(".fileEntry");
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          var visible = elements[i].querySelector("tr").querySelector("td").textContent.toLowerCase().includes(filter.toLowerCase());
+          elements[i].classList.toggle("text-filtered", !visible);
+        }
+      }
+
+      function filterText(text) {
+        filter = text.toLowerCase();
+        var elements = document.querySelectorAll(".issue");
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          var visible = false;
+          var fields = elements[i].querySelectorAll("td");
+          for (var n = 0, num = fields.length; n < num; n++) {
+            if (fields[n].textContent.toLowerCase().includes(filter)) {
+              visible = true;
+              break;
+            }
+          }
+          elements[i].classList.toggle("text-filtered", !visible);
+        }
+
+        updateFileRows();
+      }
+
+      function updateFileRows(element) {
+        var elements = document.querySelectorAll(".fileEntry");
+
+        for (var i = 0, len = elements.length; i < len; i++) {
+          var visible = elements[i].querySelector(".issue:not(.id-filtered):not(.severity-filtered):not(.tool-filtered):not(.text-filtered)");
+          elements[i].classList.toggle("file-filtered", !visible);
+        }
+      }
+
+      window.addEventListener("load", initExpandables);
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+    <div id="header" class="header">
+      <h1>Cppcheck report - phoc (cppcheck 2.7-1)</h1>
+      <div id="filters">
+
+        <label class="checkBtn"><input type="checkbox" onclick="toggleSeverity(this)" id="error"checked/>error</label>
+        <label class="checkBtn disabled"><input type="checkbox" onclick="toggleSeverity(this)" id="warning"disabled/>warning</label>
+        <label class="checkBtn disabled"><input type="checkbox" onclick="toggleSeverity(this)" id="portability"disabled/>portability</label>
+        <label class="checkBtn disabled"><input type="checkbox" onclick="toggleSeverity(this)" id="performance"disabled/>performance</label>
+        <label class="checkBtn"><input type="checkbox" onclick="toggleSeverity(this)" id="style"checked/>style</label>
+        <label class="checkBtn"><input type="checkbox" onclick="toggleSeverity(this)" id="information"checked/>information</label>
+        | 
+        <label class="checkBtn"><input type="checkbox" onclick="toggleTool(this)" id="cppcheck"checked/>cppcheck</label>
+        <label class="checkBtn disabled"><input type="checkbox" onclick="toggleTool(this)" id="clang-tidy"disabled/>clang-tidy</label>
+        | 
+        <label class="severityHeader">File: <input type="text" oninput="filterFile(this.value)"/></label>
+        <label class="severityHeader">Filter: <input type="text" oninput="filterText(this.value)"/></label>
+      </div>
+
+    </div>
+
+    <div id="menu_index">
+     <p><a href="index.html">Defect summary</a> </p>
+
+       <label><input type="checkbox" class="idToggle" onclick="toggleAll()" checked> Toggle all</label>
+       <table>
+           <tr><th>Show</th><th>#</th><th>Defect ID</th></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="uninitvar" name="uninitvar" checked></td><td>14</td><td>uninitvar</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="unusedStructMember" name="unusedStructMember" checked></td><td>9</td><td>unusedStructMember</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="constParameter" name="constParameter" checked></td><td>8</td><td>constParameter</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="syntaxError" name="syntaxError" checked></td><td>5</td><td>syntaxError</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="unknownMacro" name="unknownMacro" checked></td><td>4</td><td>unknownMacro</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="unreadVariable" name="unreadVariable" checked></td><td>3</td><td>unreadVariable</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="doubleFree" name="doubleFree" checked></td><td>1</td><td>doubleFree</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="duplicateExpression" name="duplicateExpression" checked></td><td>1</td><td>duplicateExpression</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="missingInclude" name="missingInclude" checked></td><td>1</td><td>missingInclude</td></tr>
+            <tr><td><input type="checkbox" class="idToggle" onclick="toggleDisplay(this)" id="variableScope" name="variableScope" checked></td><td>1</td><td>variableScope</td></tr>
+           <tr><td></td><td>47</td><td>total</td></tr>
+       </table>
+       <p><a href="stats.html">Statistics</a></p>
+    </div>
+    <div id="content_index">
+
+       <table class="summaryTable">
+       <tr><th>Line</th><th>Id</th><th>CWE</th><th>Severity</th><th>Message</th></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="21.html"></a></td></tr>
+         <tr class="missingInclude sev_information issue"><td></td><td>missingInclude</td><td></td><td>information</td><td>Cppcheck cannot find all the include files (use --check-config for details)</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="0.html">src/cursor.c</a></td></tr>
+         <tr class="variableScope sev_style issue"><td><a href="0.html#line-741">741</a></td><td>variableScope</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>The scope of the variable &apos;scale&apos; can be reduced.</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="0.html#line-920">920</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;data&apos; can be declared with const</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="1.html">src/desktop.c</a></td></tr>
+         <tr class="unknownMacro sev_error issue"><td><a href="1.html#line-352">352</a></td><td>unknownMacro</td><td></td><td>error</td><td class="error">There is an unknown macro here somewhere. Configuration is required. If wl_list_for_each is a macro then please configure it.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="2.html">src/gtk-shell.c</a></td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="2.html#line-282">282</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;wlr_surface&apos; can be declared with const</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="3.html">src/input.c</a></td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="3.html#line-151">151</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;wlr_seat&apos; can be declared with const</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="3.html#line-167">167</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;view&apos; can be declared with const</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="4.html">src/keybindings.c</a></td></tr>
+         <tr class="unreadVariable sev_style issue"><td><a href="4.html#line-357">357</a></td><td>unreadVariable</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>Variable &apos;len&apos; is assigned a value that is never used.</td></tr>
+         <tr class="unreadVariable sev_style issue"><td><a href="4.html#line-362">362</a></td><td>unreadVariable</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>Variable &apos;len&apos; is assigned a value that is never used.</td></tr>
+         <tr class="duplicateExpression sev_style issue"><td><a href="4.html#line-399">399</a></td><td>duplicateExpression</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Same expression on both sides of &apos;-=&apos;.</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="4.html#line-642">642</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;pressed_keysyms&apos; can be declared with const</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="5.html">src/keyboard.c</a></td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="5.html#line-43">43</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocKeyboard::input_settings&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="5.html#line-44">44</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocKeyboard::keyboard_settings&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="5.html#line-45">45</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocKeyboard::keymap&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="5.html#line-46">46</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocKeyboard::meta_key&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="5.html#line-47">47</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocKeyboard::xkbinfo&apos; is never used.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="6.html">src/layer_shell.c</a></td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="6.html#line-287">287</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: view.type, view.impl, view.desktop, view.link, view.parent_link, view.box, view.alpha, view.scale, view.decorated, view.border_width, view.titlebar_height, view.title, view.app_id, view.settings, view.state, view.tile_direction, view.fullscreen_output, view.saved, view.pending_move_resize, view.pending_centering, view.parent, view.stack, view.wlr_surface, view.child_surfaces, view.toplevel_handle, view.toplevel_handle_request_maximize, view.toplevel_handle_request_activate, view.toplevel_handle_request_fullscreen, view.toplevel_handle_request_close, view.surface_new_subsurface, view.events</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="7.html">src/output.c</a></td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="7.html#line-648">648</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: view.type, view.impl, view.desktop, view.link, view.parent_link, view.box, view.alpha, view.scale, view.decorated, view.border_width, view.titlebar_height, view.title, view.app_id, view.settings, view.state, view.tile_direction, view.fullscreen_output, view.saved, view.pending_move_resize, view.pending_centering, view.parent, view.stack, view.wlr_surface, view.child_surfaces, view.toplevel_handle, view.toplevel_handle_request_maximize, view.toplevel_handle_request_activate, view.toplevel_handle_request_fullscreen, view.toplevel_handle_request_close, view.surface_new_subsurface, view.events</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="7.html#line-739">739</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;_box&apos; can be declared with const</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="8.html">src/phosh-private.c</a></td></tr>
+         <tr class="unknownMacro sev_error issue"><td><a href="8.html#line-58">58</a></td><td>unknownMacro</td><td></td><td>error</td><td class="error">There is an unknown macro here somewhere. Configuration is required. If G_DEFINE_TYPE is a macro then please configure it.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="9.html">src/pointer.c</a></td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="9.html#line-23">23</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocPointer::touchpad_settings&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="9.html#line-24">24</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocPointer::mouse_settings&apos; is never used.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="10.html">src/render.c</a></td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="10.html#line-80">80</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocRenderer::wlr_renderer&apos; is never used.</td></tr>
+         <tr class="unusedStructMember sev_style issue"><td><a href="10.html#line-81">81</a></td><td>unusedStructMember</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>struct member &apos;_PhocRenderer::allocator&apos; is never used.</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="10.html#line-204">204</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;surface&apos; can be declared with const</td></tr>
+         <tr class="constParameter sev_style issue"><td><a href="10.html#line-228">228</a></td><td>constParameter</td><td><a href="https://cwe.mitre.org/data/definitions/398.html">398</a></td><td>style</td><td>Parameter &apos;_box&apos; can be declared with const</td></tr>
+         <tr class="unreadVariable sev_style issue"><td><a href="10.html#line-330">330</a></td><td>unreadVariable</td><td><a href="https://cwe.mitre.org/data/definitions/563.html">563</a></td><td>style</td><td>Variable &apos;n&apos; is assigned a value that is never used.</td></tr>
+         <tr class="doubleFree sev_error issue"><td><a href="10.html#line-589">589</a></td><td>doubleFree</td><td><a href="https://cwe.mitre.org/data/definitions/415.html">415</a></td><td>error</td><td class="error">Memory pointed to by &apos;fmt&apos; is freed twice.</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="10.html#line-750">750</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: view.type, view.impl, view.desktop, view.link, view.parent_link, view.box, view.alpha, view.scale, view.decorated, view.border_width, view.titlebar_height, view.title, view.app_id, view.settings, view.state, view.tile_direction, view.fullscreen_output, view.saved, view.pending_move_resize, view.pending_centering, view.parent, view.stack, view.wlr_surface, view.child_surfaces, view.toplevel_handle, view.toplevel_handle_request_maximize, view.toplevel_handle_request_activate, view.toplevel_handle_request_fullscreen, view.toplevel_handle_request_close, view.surface_new_subsurface, view.events</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="11.html">src/seat.c</a></td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-914">914</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: output.parent, output.desktop, output.wlr_output, output.link, output.fullscreen_view, output.force_shell_reveal, output.last_frame, output.damage, output.debug_touch_points, output.usable_area, output.enable, output.mode, output.commit, output.damage_frame, output.damage_destroy, output.output_destroy</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-935">935</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: view.seat, view.view, view.has_button_grab, view.grab_sx, view.grab_sy, view.link, view.view_unmap, view.view_destroy</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1357">1357</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: pad.link, pad.tablet_v2_pad, pad.seat, pad.device_destroy, pad.attach, pad.button, pad.ring, pad.strip, pad.tablet, pad.tablet_destroy</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1401">1401</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: output-&gt;wlr_output</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1556">1556</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: child.type, child.impl, child.desktop, child.link, child.parent_link, child.box, child.alpha, child.scale, child.decorated, child.border_width, child.titlebar_height, child.title, child.app_id, child.settings, child.state, child.tile_direction, child.fullscreen_output, child.saved, child.pending_move_resize, child.pending_centering, child.parent, child.stack, child.wlr_surface, child.child_surfaces, child.toplevel_handle, child.toplevel_handle_request_maximize, child.toplevel_handle_request_activate, child.toplevel_handle_request_fullscreen, child.toplevel_handle_request_close, child.surface_new_subsurface, child.events</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1598">1598</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: output-&gt;fullscreen_view</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1668">1668</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: pad-&gt;tablet</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="11.html#line-1704">1704</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variables: output.parent, output.desktop, output.wlr_output, output.link, output.fullscreen_view, output.force_shell_reveal, output.last_frame, output.damage, output.debug_touch_points, output.usable_area, output.enable, output.mode, output.commit, output.damage_frame, output.damage_destroy, output.output_destroy</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="12.html">src/server.c</a></td></tr>
+         <tr class="unknownMacro sev_error issue"><td><a href="12.html#line-217">217</a></td><td>unknownMacro</td><td></td><td>error</td><td class="error">There is an unknown macro here somewhere. Configuration is required. If wl_list_for_each is a macro then please configure it.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="13.html">src/settings.c</a></td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="13.html#line-88">88</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: oc-&gt;name</td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="13.html#line-295">295</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: oc-&gt;name</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="14.html">src/text_input.c</a></td></tr>
+         <tr class="uninitvar sev_error issue"><td><a href="14.html#line-369">369</a></td><td>uninitvar</td><td><a href="https://cwe.mitre.org/data/definitions/457.html">457</a></td><td>error</td><td class="error">Uninitialized variable: text_input-&gt;pending_focused_surface</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="15.html">src/view.c</a></td></tr>
+         <tr class="unknownMacro sev_error issue"><td><a href="15.html#line-724">724</a></td><td>unknownMacro</td><td></td><td>error</td><td class="error">There is an unknown macro here somewhere. Configuration is required. If wl_list_for_each is a macro then please configure it.</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="16.html">tests/test-layer-shell.c</a></td></tr>
+         <tr class="syntaxError sev_error issue"><td><a href="16.html#line-29">29</a></td><td>syntaxError</td><td></td><td>error</td><td class="error">syntax error</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="17.html">tests/test-phosh-private.c</a></td></tr>
+         <tr class="syntaxError sev_error issue"><td><a href="17.html#line-268">268</a></td><td>syntaxError</td><td></td><td>error</td><td class="error">syntax error</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="18.html">tests/test-run.c</a></td></tr>
+         <tr class="syntaxError sev_error issue"><td><a href="18.html#line-30">30</a></td><td>syntaxError</td><td></td><td>error</td><td class="error">syntax error</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="19.html">tests/test-server.c</a></td></tr>
+         <tr class="syntaxError sev_error issue"><td><a href="19.html#line-44">44</a></td><td>syntaxError</td><td></td><td>error</td><td class="error">syntax error</td></tr>
+      <tbody class="fileEntry">
+       <tr><td colspan="5"><a href="20.html">tests/testlib.c</a></td></tr>
+         <tr class="syntaxError sev_error issue"><td><a href="20.html#line-156">156</a></td><td>syntaxError</td><td></td><td>error</td><td class="error">syntax error</td></tr>
+      </tbody>
+       </table>
+    </div>
+    <div id="footer" class="footer">
+      <p>
+        Created by Cppcheck 2.7 (<a href="https://cppcheck.sourceforge.io">Sourceforge</a>, <a href="irc://irc.freenode.net/cppcheck">IRC</a>)
+      </p>
+    </div>
+    </div>
+  </body>
+</html>

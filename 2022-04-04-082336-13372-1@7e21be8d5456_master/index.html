@@ -1,0 +1,769 @@
+<html>
+<head>
+<title>phoc (clang-tools 1:13.0-54) - scan-build results</title>
+<link type="text/css" rel="stylesheet" href="scanview.css"/>
+<script src="sorttable.js"></script>
+<script language='javascript' type="text/javascript">
+function SetDisplay(RowClass, DisplayVal)
+{
+  var Rows = document.getElementsByTagName("tr");
+  for ( var i = 0 ; i < Rows.length; ++i ) {
+    if (Rows[i].className == RowClass) {
+      Rows[i].style.display = DisplayVal;
+    }
+  }
+}
+
+function CopyCheckedStateToCheckButtons(SummaryCheckButton) {
+  var Inputs = document.getElementsByTagName("input");
+  for ( var i = 0 ; i < Inputs.length; ++i ) {
+    if (Inputs[i].type == "checkbox") {
+      if(Inputs[i] != SummaryCheckButton) {
+        Inputs[i].checked = SummaryCheckButton.checked;
+        Inputs[i].onclick();
+      }
+    }
+  }
+}
+
+function returnObjById( id ) {
+    if (document.getElementById)
+        var returnVar = document.getElementById(id);
+    else if (document.all)
+        var returnVar = document.all[id];
+    else if (document.layers)
+        var returnVar = document.layers[id];
+    return returnVar;
+}
+
+var NumUnchecked = 0;
+
+function ToggleDisplay(CheckButton, ClassName) {
+  if (CheckButton.checked) {
+    SetDisplay(ClassName, "");
+    if (--NumUnchecked == 0) {
+      returnObjById("AllBugsCheck").checked = true;
+    }
+  }
+  else {
+    SetDisplay(ClassName, "none");
+    NumUnchecked++;
+    returnObjById("AllBugsCheck").checked = false;
+  }
+}
+</script>
+<!-- SUMMARYENDHEAD -->
+</head>
+<body>
+<h1>phoc (clang-tools 1:13.0-54) - scan-build results</h1>
+
+<table>
+<tr><th>User:</th><td>root@c21adce519a6</td></tr>
+<tr><th>Working Directory:</th><td>/rootdir</td></tr>
+<tr><th>Command Line:</th><td>ninja -C _build</td></tr>
+<tr><th>Clang Version:</th><td>Debian clang version 13.0.1-3+b2
+</td></tr>
+<tr><th>Date:</th><td>Mon Apr  4 08:23:36 2022</td></tr>
+</table>
+<h2>Bug Summary</h2><table>
+<thead><tr><td>Bug Type</td><td>Quantity</td><td class="sorttable_nosort">Display?</td></tr></thead>
+<tr style="font-weight:bold"><td class="SUMM_DESC">All Bugs</td><td class="Q">224</td><td><center><input type="checkbox" id="AllBugsCheck" onClick="CopyCheckedStateToCheckButtons(this);" checked/></center></td></tr>
+<tr><th>Logic error</th><th colspan=2></th></tr>
+<tr><td class="SUMM_DESC">Cast from non-struct type to struct type</td><td class="Q">214</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_cast_from_non-struct_type_to_struct_type');" checked/></center></td></tr>
+<tr><td class="SUMM_DESC">Uninitialized argument value</td><td class="Q">2</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_logic_error_uninitialized_argument_value');" checked/></center></td></tr>
+<tr><th>Memory error</th><th colspan=2></th></tr>
+<tr><td class="SUMM_DESC">Memory leak</td><td class="Q">1</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_memory_error_memory_leak');" checked/></center></td></tr>
+<tr><th>Unused code</th><th colspan=2></th></tr>
+<tr><td class="SUMM_DESC">Dead increment</td><td class="Q">4</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_unused_code_dead_increment');" checked/></center></td></tr>
+<tr><td class="SUMM_DESC">Dead initialization</td><td class="Q">3</td><td><center><input type="checkbox" onClick="ToggleDisplay(this,'bt_unused_code_dead_initialization');" checked/></center></td></tr>
+</table>
+<h2>Reports</h2>
+
+<table class="sortable" style="table-layout:automatic">
+<thead><tr>
+  <td>Bug Group</td>
+  <td class="sorttable_sorted">Bug Type<span id="sorttable_sortfwdind">&nbsp;&#x25BE;</span></td>
+  <td>File</td>
+  <td>Function/Method</td>
+  <td class="Q">Line</td>
+  <td class="Q">Path Length</td>
+  <td class="sorttable_nosort"></td>
+  <!-- REPORTBUGCOL -->
+</tr></thead>
+<tbody>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_map</td><td class="Q">624</td><td class="Q">1</td><td><a href="report-0061f8.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0061f8.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_request_set_cursor</td><td class="Q">542</td><td class="Q">1</td><td><a href="report-00abef.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-00abef.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_pad_tool_destroy</td><td class="Q">1169</td><td class="Q">1</td><td><a href="report-015c10.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-015c10.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">phoc_layer_shell_update_focus</td><td class="Q">315</td><td class="Q">1</td><td><a href="report-028ad8.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-028ad8.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">seat_view_handle_unmap</td><td class="Q">1477</td><td class="Q">1</td><td><a href="report-034d7e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-034d7e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">handle_toplevel_handle_request_close</td><td class="Q">1255</td><td class="Q">1</td><td><a href="report-05b1da.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-05b1da.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_drag_icon_handle_surface_commit</td><td class="Q">749</td><td class="Q">1</td><td><a href="report-06be77.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-06be77.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/input-device.c</td><td class="DESC">handle_device_destroy</td><td class="Q">105</td><td class="Q">1</td><td><a href="report-06f8b3.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-06f8b3.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_layer_for_each_surface</td><td class="Q">582</td><td class="Q">1</td><td><a href="report-07a0d5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-07a0d5.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/server.c</td><td class="DESC">on_shell_state_changed</td><td class="Q">217</td><td class="Q">1</td><td><a href="report-07d3fc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-07d3fc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_tool_destroy</td><td class="Q">444</td><td class="Q">1</td><td><a href="report-080a72.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-080a72.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">handle_output_manager_apply</td><td class="Q">859</td><td class="Q">1</td><td><a href="report-087ba0.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-087ba0.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_handle_mode</td><td class="Q">224</td><td class="Q">1</td><td><a href="report-0b0656.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0b0656.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_set_auto_maximize</td><td class="Q">867</td><td class="Q">1</td><td><a href="report-0beb58.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0beb58.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/cursor.c</td><td class="DESC">roots_handle_shell_reveal</td><td class="Q">186</td><td class="Q">1</td><td><a href="report-0c91ba.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0c91ba.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">desktop_view_at</td><td class="Q">148</td><td class="Q">1</td><td><a href="report-0c97c2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0c97c2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_map</td><td class="Q">491</td><td class="Q">1</td><td><a href="report-0d5ebf.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0d5ebf.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">popup_handle_new_popup</td><td class="Q">61</td><td class="Q">1</td><td><a href="report-0e95a5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0e95a5.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_cursor_motion</td><td class="Q">100</td><td class="Q">1</td><td><a href="report-0fecdc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-0fecdc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_unmap</td><td class="Q">515</td><td class="Q">1</td><td><a href="report-1088e5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1088e5.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_destroy</td><td class="Q">933</td><td class="Q">1</td><td><a href="report-10edcb.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-10edcb.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">handle_toplevel_handle_request_activate</td><td class="Q">1231</td><td class="Q">1</td><td><a href="report-1126a6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1126a6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_pad_ring</td><td class="Q">1208</td><td class="Q">1</td><td><a href="report-120ffd.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-120ffd.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">view_unmap</td><td class="Q">1001</td><td class="Q">1</td><td><a href="report-1247e9.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1247e9.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_handle_commit</td><td class="Q">233</td><td class="Q">1</td><td><a href="report-134ca2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-134ca2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/settings.c</td><td class="DESC">phoc_config_destroy</td><td class="Q">263</td><td class="Q">1</td><td><a href="report-135230.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-135230.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_destroy</td><td class="Q">530</td><td class="Q">1</td><td><a href="report-137734.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-137734.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_find_output</td><td class="Q">925</td><td class="Q">1</td><td><a href="report-146ffc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-146ffc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_toggle_output_blank</td><td class="Q">835</td><td class="Q">1</td><td><a href="report-149b7c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-149b7c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_configure_xcursor</td><td class="Q">1400</td><td class="Q">1</td><td><a href="report-14b353.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-14b353.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_layer_handle_surface</td><td class="Q">557</td><td class="Q">1</td><td><a href="report-17f71c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-17f71c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_switch_toggle</td><td class="Q">239</td><td class="Q">1</td><td><a href="report-18c972.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-18c972.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_request_fullscreen</td><td class="Q">276</td><td class="Q">1</td><td><a href="report-1c81c8.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1c81c8.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_map</td><td class="Q">705</td><td class="Q">1</td><td><a href="report-1e9fc0.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1e9fc0.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_xwayland_children_for_each_surface</td><td class="Q">529</td><td class="Q">1</td><td><a href="report-1f05ba.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1f05ba.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_layer_for_each_surface</td><td class="Q">588</td><td class="Q">1</td><td><a href="report-21b29c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-21b29c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_map</td><td class="Q">946</td><td class="Q">1</td><td><a href="report-21d03e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-21d03e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_cursor_button</td><td class="Q">127</td><td class="Q">1</td><td><a href="report-22d0b7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-22d0b7.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">decoration_handle_destroy</td><td class="Q">617</td><td class="Q">1</td><td><a href="report-26b013.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-26b013.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_damage_whole</td><td class="Q">1101</td><td class="Q">1</td><td><a href="report-284b11.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-284b11.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_map</td><td class="Q">615</td><td class="Q">1</td><td><a href="report-295d77.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-295d77.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_surface_commit</td><td class="Q">316</td><td class="Q">1</td><td><a href="report-298432.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-298432.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tool_tip</td><td class="Q">425</td><td class="Q">1</td><td><a href="report-2bbe52.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-2bbe52.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_map</td><td class="Q">962</td><td class="Q">1</td><td><a href="report-2c0332.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-2c0332.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_map</td><td class="Q">351</td><td class="Q">1</td><td><a href="report-2c64bd.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-2c64bd.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">phoc_layer_shell_update_focus</td><td class="Q">313</td><td class="Q">1</td><td><a href="report-2c7088.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-2c7088.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_request_resize</td><td class="Q">371</td><td class="Q">1</td><td><a href="report-30ab0c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-30ab0c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_request_set_primary_selection</td><td class="Q">867</td><td class="Q">1</td><td><a href="report-30c274.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-30c274.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">handle_toplevel_handle_request_maximize</td><td class="Q">1217</td><td class="Q">1</td><td><a href="report-324792.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-324792.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_unmap</td><td class="Q">733</td><td class="Q">1</td><td><a href="report-34dc3a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-34dc3a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_child_handle_commit</td><td class="Q">702</td><td class="Q">1</td><td><a href="report-36170a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-36170a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_unmap</td><td class="Q">642</td><td class="Q">1</td><td><a href="report-378b5a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-378b5a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">phoc_layer_shell_arrange</td><td class="Q">286</td><td class="Q">1</td><td><a href="report-381716.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-381716.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">phoc_input_method_relay_set_focus</td><td class="Q">367</td><td class="Q">1</td><td><a href="report-3986cf.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3986cf.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/cursor.c</td><td class="DESC">phoc_cursor_handle_touch_down</td><td class="Q">672</td><td class="Q">1</td><td><a href="report-3a0dab.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3a0dab.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">relay_get_focused_text_input</td><td class="Q">47</td><td class="Q">1</td><td><a href="report-3a56b6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3a56b6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_set_title</td><td class="Q">286</td><td class="Q">1</td><td><a href="report-3a80f4.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3a80f4.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/input.c</td><td class="DESC">handle_new_input</td><td class="Q">84</td><td class="Q">1</td><td><a href="report-3bb874.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3bb874.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_drag_icon_handle_unmap</td><td class="Q">769</td><td class="Q">1</td><td><a href="report-3be78d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3be78d.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_set_mode</td><td class="Q">252</td><td class="Q">1</td><td><a href="report-3c6adc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3c6adc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_child_init_subsurfaces</td><td class="Q">739</td><td class="Q">1</td><td><a href="report-3da96c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3da96c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_start_drag</td><td class="Q">823</td><td class="Q">1</td><td><a href="report-3eaed1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3eaed1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_touch_down</td><td class="Q">252</td><td class="Q">1</td><td><a href="report-3eaf13.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-3eaf13.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_new_popup</td><td class="Q">565</td><td class="Q">1</td><td><a href="report-401f2c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-401f2c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_request_fullscreen</td><td class="Q">405</td><td class="Q">1</td><td><a href="report-40d193.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-40d193.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/render.c</td><td class="DESC">scan_out_fullscreen_view</td><td class="Q">352</td><td class="Q">1</td><td><a href="report-40ef76.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-40ef76.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_child_init_subsurfaces</td><td class="Q">736</td><td class="Q">1</td><td><a href="report-4229a9.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4229a9.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_layout_change</td><td class="Q">352</td><td class="Q">1</td><td><a href="report-43ebb1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-43ebb1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">layer_surface_at</td><td class="Q">161</td><td class="Q">1</td><td><a href="report-447f98.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-447f98.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/gtk-shell.c</td><td class="DESC">handle_wlr_surface_handle_destroy</td><td class="Q">126</td><td class="Q">1</td><td><a href="report-45090b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-45090b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/settings.c</td><td class="DESC">phoc_config_get_output</td><td class="Q">294</td><td class="Q">1</td><td><a href="report-470a94.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-470a94.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_commit</td><td class="Q">651</td><td class="Q">1</td><td><a href="report-47df2e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-47df2e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_for_each_surface</td><td class="Q">646</td><td class="Q">1</td><td><a href="report-4862cc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4862cc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/cursor.c</td><td class="DESC">phoc_cursor_handle_touch_motion</td><td class="Q">749</td><td class="Q">1</td><td><a href="report-48d7c3.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-48d7c3.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">subsurface_handle_destroy</td><td class="Q">783</td><td class="Q">1</td><td><a href="report-4a024b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4a024b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">seat_add_tablet_tool</td><td class="Q">1349</td><td class="Q">1</td><td><a href="report-4ad39d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4ad39d.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">view_unmap</td><td class="Q">987</td><td class="Q">1</td><td><a href="report-4d494b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4d494b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/render.c</td><td class="DESC">output_render</td><td class="Q">749</td><td class="Q">1</td><td><a href="report-4fcdf6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4fcdf6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_unmap</td><td class="Q">523</td><td class="Q">1</td><td><a href="report-4ff5de.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-4ff5de.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_destroy</td><td class="Q">197</td><td class="Q">1</td><td><a href="report-500002.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-500002.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/settings.c</td><td class="DESC">phoc_config_destroy</td><td class="Q">265</td><td class="Q">1</td><td><a href="report-51c26d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-51c26d.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_request_set_selection</td><td class="Q">856</td><td class="Q">1</td><td><a href="report-52e3d1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-52e3d1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_text_input_destroy</td><td class="Q">212</td><td class="Q">1</td><td><a href="report-533375.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-533375.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">relay_get_focusable_text_input</td><td class="Q">36</td><td class="Q">1</td><td><a href="report-533bf0.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-533bf0.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_new_subsurface</td><td class="Q">604</td><td class="Q">1</td><td><a href="report-53ddbb.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-53ddbb.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_pad_attach</td><td class="Q">1197</td><td class="Q">1</td><td><a href="report-53ff00.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-53ff00.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_map</td><td class="Q">618</td><td class="Q">1</td><td><a href="report-543cb6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-543cb6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_layout_change</td><td class="Q">332</td><td class="Q">1</td><td><a href="report-545bb2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-545bb2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_tool_set_cursor</td><td class="Q">476</td><td class="Q">1</td><td><a href="report-575528.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-575528.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_constraint_destroy</td><td class="Q">386</td><td class="Q">1</td><td><a href="report-57a335.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-57a335.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/keyboard.c</td><td class="DESC">handle_keyboard_modifiers</td><td class="Q">519</td><td class="Q">1</td><td><a href="report-580dd4.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-580dd4.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_drag_icon_handle_destroy</td><td class="Q">779</td><td class="Q">1</td><td><a href="report-58df3c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-58df3c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">view_destroy</td><td class="Q">56</td><td class="Q">1</td><td><a href="report-5b1163.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-5b1163.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_map</td><td class="Q">949</td><td class="Q">1</td><td><a href="report-5c6b51.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-5c6b51.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_drag_icon_handle_map</td><td class="Q">759</td><td class="Q">1</td><td><a href="report-5deb20.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-5deb20.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_layer_shell_surface</td><td class="Q">746</td><td class="Q">1</td><td><a href="report-5e177f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-5e177f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_request_maximize</td><td class="Q">387</td><td class="Q">1</td><td><a href="report-60bf65.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-60bf65.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_set_parent</td><td class="Q">435</td><td class="Q">1</td><td><a href="report-6270d7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6270d7.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_unmap</td><td class="Q">640</td><td class="Q">1</td><td><a href="report-630b07.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-630b07.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_destroy</td><td class="Q">924</td><td class="Q">1</td><td><a href="report-64c029.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-64c029.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">subsurface_handle_destroy</td><td class="Q">657</td><td class="Q">1</td><td><a href="report-681742.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-681742.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_destroy</td><td class="Q">390</td><td class="Q">1</td><td><a href="report-689bed.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-689bed.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_swipe_end</td><td class="Q">188</td><td class="Q">1</td><td><a href="report-68c387.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-68c387.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_surface_commit</td><td class="Q">345</td><td class="Q">1</td><td><a href="report-69ee96.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-69ee96.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_pinch_update</td><td class="Q">212</td><td class="Q">1</td><td><a href="report-6b0431.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6b0431.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_touch_up</td><td class="Q">271</td><td class="Q">1</td><td><a href="report-6c3f84.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6c3f84.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_init_subsurfaces</td><td class="Q">724</td><td class="Q">1</td><td><a href="report-6c692c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6c692c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">handle_output_manager_test</td><td class="Q">914</td><td class="Q">1</td><td><a href="report-6ddba2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6ddba2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_handle_surface_new_subsurface</td><td class="Q">864</td><td class="Q">1</td><td><a href="report-6f1715.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6f1715.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_from_wlr_surface</td><td class="Q">1299</td><td class="Q">1</td><td><a href="report-6f2bb4.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6f2bb4.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_damage_handle_destroy</td><td class="Q">210</td><td class="Q">1</td><td><a href="report-6f3419.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6f3419.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_pad_button</td><td class="Q">1234</td><td class="Q">1</td><td><a href="report-728187.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-728187.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_view_from_view</td><td class="Q">1519</td><td class="Q">1</td><td><a href="report-728c85.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-728c85.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_child_handle_new_subsurface</td><td class="Q">713</td><td class="Q">1</td><td><a href="report-75586b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-75586b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">layer_surface_at</td><td class="Q">177</td><td class="Q">1</td><td><a href="report-761fba.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-761fba.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_set_focus</td><td class="Q">1597</td><td class="Q">1</td><td><a href="report-767eab.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-767eab.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_set_focus_layer</td><td class="Q">1703</td><td class="Q">1</td><td><a href="report-770e6a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-770e6a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_map</td><td class="Q">711</td><td class="Q">1</td><td><a href="report-7729e6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-7729e6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">handle_output_manager_apply</td><td class="Q">874</td><td class="Q">1</td><td><a href="report-78d26a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-78d26a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_new_popup</td><td class="Q">463</td><td class="Q">1</td><td><a href="report-7aeac5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-7aeac5.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">arrange_layer</td><td class="Q">125</td><td class="Q">1</td><td><a href="report-7c495b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-7c495b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">popup_handle_map</td><td class="Q">42</td><td class="Q">1</td><td><a href="report-7d7471.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-7d7471.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">subsurface_handle_map</td><td class="Q">799</td><td class="Q">1</td><td><a href="report-7f2188.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-7f2188.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_apply_damage</td><td class="Q">1084</td><td class="Q">1</td><td><a href="report-805848.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-805848.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">phoc_view_init_subsurfaces</td><td class="Q">727</td><td class="Q">1</td><td><a href="report-807307.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-807307.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">decoration_handle_request_mode</td><td class="Q">630</td><td class="Q">1</td><td><a href="report-80a84c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-80a84c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/virtual.c</td><td class="DESC">phoc_handle_virtual_pointer</td><td class="Q">33</td><td class="Q">1</td><td><a href="report-820774.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-820774.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_cursor_axis</td><td class="Q">140</td><td class="Q">1</td><td><a href="report-82103a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-82103a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_pending_focused_surface_destroy</td><td class="Q">231</td><td class="Q">1</td><td><a href="report-82c00f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-82c00f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_layout_change</td><td class="Q">342</td><td class="Q">1</td><td><a href="report-856a42.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-856a42.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_set_focus</td><td class="Q">1667</td><td class="Q">1</td><td><a href="report-86b966.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-86b966.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_get_builtin_output</td><td class="Q">950</td><td class="Q">1</td><td><a href="report-8bba57.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-8bba57.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_drag_icon_damage_whole</td><td class="Q">913</td><td class="Q">1</td><td><a href="report-8bf30e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-8bf30e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tool_proximity</td><td class="Q">496</td><td class="Q">1</td><td><a href="report-8e4dee.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-8e4dee.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">relay_handle_text_input</td><td class="Q">270</td><td class="Q">1</td><td><a href="report-8f65d6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-8f65d6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_set_exclusive_client</td><td class="Q">1767</td><td class="Q">1</td><td><a href="report-90b738.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-90b738.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_pinch_end</td><td class="Q">225</td><td class="Q">1</td><td><a href="report-913ee2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-913ee2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_commit</td><td class="Q">524</td><td class="Q">1</td><td><a href="report-916278.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-916278.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/cursor.c</td><td class="DESC">handle_constraint_commit</td><td class="Q">922</td><td class="Q">1</td><td><a href="report-92d6a9.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-92d6a9.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_request_maximize</td><td class="Q">259</td><td class="Q">1</td><td><a href="report-941f78.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-941f78.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">seat_raise_view_stack</td><td class="Q">1554</td><td class="Q">1</td><td><a href="report-951fb1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-951fb1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_im_commit</td><td class="Q">57</td><td class="Q">1</td><td><a href="report-95e325.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-95e325.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_xwayland_ready</td><td class="Q">471</td><td class="Q">1</td><td><a href="report-99ddd5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-99ddd5.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_swipe_update</td><td class="Q">176</td><td class="Q">1</td><td><a href="report-9a8f69.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-9a8f69.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">update_output_manager_config</td><td class="Q">165</td><td class="Q">1</td><td><a href="report-9fe25c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-9fe25c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_set_focus_layer</td><td class="Q">1696</td><td class="Q">1</td><td><a href="report-a02fea.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a02fea.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_request_move</td><td class="Q">355</td><td class="Q">1</td><td><a href="report-a10268.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a10268.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">popup_handle_unmap</td><td class="Q">50</td><td class="Q">1</td><td><a href="report-a2702b.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a2702b.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_cursor_frame</td><td class="Q">153</td><td class="Q">1</td><td><a href="report-a4e715.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a4e715.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_view_is_visible</td><td class="Q">297</td><td class="Q">1</td><td><a href="report-a5a196.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a5a196.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_constructed</td><td class="Q">324</td><td class="Q">1</td><td><a href="report-a77bdc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a77bdc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_text_input_disable</td><td class="Q">204</td><td class="Q">1</td><td><a href="report-a79aae.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a79aae.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">_close</td><td class="Q">299</td><td class="Q">1</td><td><a href="report-a8c96e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a8c96e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">decoration_handle_surface_commit</td><td class="Q">643</td><td class="Q">1</td><td><a href="report-a8c9d9.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a8c9d9.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_cycle_focus</td><td class="Q">1795</td><td class="Q">1</td><td><a href="report-a8e89e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-a8e89e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">seat_view_handle_destroy</td><td class="Q">1486</td><td class="Q">1</td><td><a href="report-ab8af2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-ab8af2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_pad_strip</td><td class="Q">1221</td><td class="Q">1</td><td><a href="report-ac208a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-ac208a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">find_osk</td><td class="Q">224</td><td class="Q">1</td><td><a href="report-ac6176.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-ac6176.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">phoc_desktop_set_auto_maximize</td><td class="Q">872</td><td class="Q">1</td><td><a href="report-acf96f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-acf96f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tablet_pad_destroy</td><td class="Q">1149</td><td class="Q">1</td><td><a href="report-aea6fd.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-aea6fd.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_pinch_begin</td><td class="Q">200</td><td class="Q">1</td><td><a href="report-b09c1c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b09c1c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/cursor.c</td><td class="DESC">phoc_cursor_handle_touch_motion</td><td class="Q">759</td><td class="Q">1</td><td><a href="report-b3a556.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b3a556.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_map</td><td class="Q">497</td><td class="Q">1</td><td><a href="report-b5f9fc.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b5f9fc.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_cursor_motion_absolute</td><td class="Q">114</td><td class="Q">1</td><td><a href="report-b66c17.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b66c17.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_im_destroy</td><td class="Q">103</td><td class="Q">1</td><td><a href="report-b78e28.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b78e28.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/virtual.c</td><td class="DESC">phoc_handle_virtual_keyboard</td><td class="Q">19</td><td class="Q">1</td><td><a href="report-b94a7a.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b94a7a.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/render.c</td><td class="DESC">collect_touch_points</td><td class="Q">216</td><td class="Q">1</td><td><a href="report-bb00ca.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-bb00ca.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_unmap</td><td class="Q">729</td><td class="Q">1</td><td><a href="report-bcd43f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-bcd43f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_touch_motion</td><td class="Q">291</td><td class="Q">1</td><td><a href="report-be0b23.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-be0b23.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/settings.c</td><td class="DESC">config_ini_handler</td><td class="Q">87</td><td class="Q">1</td><td><a href="report-be42ac.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-be42ac.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/keyboard.c</td><td class="DESC">handle_keyboard_key</td><td class="Q">506</td><td class="Q">1</td><td><a href="report-beb9d1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-beb9d1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_unmap</td><td class="Q">513</td><td class="Q">1</td><td><a href="report-bf60dd.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-bf60dd.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_xwayland_surface</td><td class="Q">395</td><td class="Q">1</td><td><a href="report-c00410.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c00410.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_xdg_shell_surface</td><td class="Q">543</td><td class="Q">1</td><td><a href="report-c11494.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c11494.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">handle_new_output</td><td class="Q">546</td><td class="Q">1</td><td><a href="report-c35b06.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c35b06.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_switch_destroy</td><td class="Q">1082</td><td class="Q">1</td><td><a href="report-c56c86.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c56c86.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">view_update_output</td><td class="Q">199</td><td class="Q">1</td><td><a href="report-c7266f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c7266f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">input_inhibit_deactivate</td><td class="Q">371</td><td class="Q">1</td><td><a href="report-c92337.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-c92337.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tool_axis</td><td class="Q">360</td><td class="Q">1</td><td><a href="report-cc40a3.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-cc40a3.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">relay_handle_input_method</td><td class="Q">297</td><td class="Q">1</td><td><a href="report-cc9e03.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-cc9e03.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_unmap</td><td class="Q">386</td><td class="Q">1</td><td><a href="report-cca4d6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-cca4d6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">popup_handle_destroy</td><td class="Q">36</td><td class="Q">1</td><td><a href="report-ccd88f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-ccd88f.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_request_resize</td><td class="Q">246</td><td class="Q">1</td><td><a href="report-d12aae.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d12aae.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_damage_handle_frame</td><td class="Q">201</td><td class="Q">1</td><td><a href="report-d17164.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d17164.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_destroy</td><td class="Q">529</td><td class="Q">1</td><td><a href="report-d3044e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d3044e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_surface_commit</td><td class="Q">447</td><td class="Q">1</td><td><a href="report-d3882e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d3882e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_handle_map</td><td class="Q">483</td><td class="Q">1</td><td><a href="report-d65e7c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d65e7c.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_new_popup</td><td class="Q">501</td><td class="Q">1</td><td><a href="report-d7eb88.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-d7eb88.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">handle_output_manager_apply</td><td class="Q">852</td><td class="Q">1</td><td><a href="report-dc47c1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dc47c1.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_get_focus</td><td class="Q">1438</td><td class="Q">1</td><td><a href="report-dc56dd.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dc56dd.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">seat_view_destroy</td><td class="Q">1467</td><td class="Q">1</td><td><a href="report-dc66fa.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dc66fa.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">popup_new_subsurface</td><td class="Q">473</td><td class="Q">1</td><td><a href="report-dc8575.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dc8575.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_set_app_id</td><td class="Q">427</td><td class="Q">1</td><td><a href="report-dd1ef7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dd1ef7.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_tool_button</td><td class="Q">459</td><td class="Q">1</td><td><a href="report-dde1c7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dde1c7.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">subsurface_handle_unmap</td><td class="Q">811</td><td class="Q">1</td><td><a href="report-de69b7.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-de69b7.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_pointer_focus_change</td><td class="Q">552</td><td class="Q">1</td><td><a href="report-de7e9e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-de7e9e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_request_configure</td><td class="Q">203</td><td class="Q">1</td><td><a href="report-dfd5ce.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-dfd5ce.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_handle_request_start_drag</td><td class="Q">797</td><td class="Q">1</td><td><a href="report-e0a5e3.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e0a5e3.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">handle_swipe_begin</td><td class="Q">164</td><td class="Q">1</td><td><a href="report-e25de2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e25de2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_text_input_commit</td><td class="Q">172</td><td class="Q">1</td><td><a href="report-e3249d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e3249d.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_new_subsurface</td><td class="Q">687</td><td class="Q">1</td><td><a href="report-e7962e.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e7962e.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_map</td><td class="Q">508</td><td class="Q">1</td><td><a href="report-e7f422.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e7f422.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/phosh-private.c</td><td class="DESC">thumbnail_view_handle_destroy</td><td class="Q">386</td><td class="Q">1</td><td><a href="report-e89f03.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-e89f03.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_handle_destroy</td><td class="Q">182</td><td class="Q">1</td><td><a href="report-edb7e2.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-edb7e2.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_set_class</td><td class="Q">294</td><td class="Q">1</td><td><a href="report-eedcb6.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-eedcb6.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/seat.c</td><td class="DESC">phoc_seat_cycle_focus</td><td class="Q">1783</td><td class="Q">1</td><td><a href="report-ef50e3.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-ef50e3.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/layer_shell.c</td><td class="DESC">handle_output_destroy</td><td class="Q">336</td><td class="Q">1</td><td><a href="report-f00072.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f00072.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/output.c</td><td class="DESC">phoc_output_handle_enable</td><td class="Q">192</td><td class="Q">1</td><td><a href="report-f2a509.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f2a509.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">handle_toplevel_handle_request_fullscreen</td><td class="Q">1247</td><td class="Q">1</td><td><a href="report-f43d25.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f43d25.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xdg_shell.c</td><td class="DESC">handle_set_title</td><td class="Q">419</td><td class="Q">1</td><td><a href="report-f75a20.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f75a20.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/text_input.c</td><td class="DESC">handle_text_input_enable</td><td class="Q">153</td><td class="Q">1</td><td><a href="report-f7ce07.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f7ce07.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/view.c</td><td class="DESC">subsurface_handle_map</td><td class="Q">790</td><td class="Q">1</td><td><a href="report-f8d218.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f8d218.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/xwayland.c</td><td class="DESC">handle_request_move</td><td class="Q">233</td><td class="Q">1</td><td><a href="report-f9ed95.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f9ed95.html" -->
+</tr>
+<tr class="bt_logic_error_cast_from_non-struct_type_to_struct_type"><td class="DESC">Logic error</td><td class="DESC">Cast from non-struct type to struct type</td><td>src/desktop.c</td><td class="DESC">input_inhibit_activate</td><td class="Q">357</td><td class="Q">1</td><td><a href="report-fc447f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-fc447f.html" -->
+</tr>
+<tr class="bt_unused_code_dead_increment"><td class="DESC">Unused code</td><td class="DESC">Dead increment</td><td>src/keybindings.c</td><td class="DESC">parse_accelerator</td><td class="Q">356</td><td class="Q">1</td><td><a href="report-2f566f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-2f566f.html" -->
+</tr>
+<tr class="bt_unused_code_dead_increment"><td class="DESC">Unused code</td><td class="DESC">Dead increment</td><td>src/keybindings.c</td><td class="DESC">parse_accelerator</td><td class="Q">357</td><td class="Q">1</td><td><a href="report-6a0ce0.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-6a0ce0.html" -->
+</tr>
+<tr class="bt_unused_code_dead_increment"><td class="DESC">Unused code</td><td class="DESC">Dead increment</td><td>src/keybindings.c</td><td class="DESC">parse_accelerator</td><td class="Q">361</td><td class="Q">1</td><td><a href="report-76031f.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-76031f.html" -->
+</tr>
+<tr class="bt_unused_code_dead_increment"><td class="DESC">Unused code</td><td class="DESC">Dead increment</td><td>src/keybindings.c</td><td class="DESC">parse_accelerator</td><td class="Q">362</td><td class="Q">1</td><td><a href="report-f71830.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-f71830.html" -->
+</tr>
+<tr class="bt_unused_code_dead_initialization"><td class="DESC">Unused code</td><td class="DESC">Dead initialization</td><td>src/output.c</td><td class="DESC">handle_output_manager_test</td><td class="Q">913</td><td class="Q">1</td><td><a href="report-1aa516.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-1aa516.html" -->
+</tr>
+<tr class="bt_unused_code_dead_initialization"><td class="DESC">Unused code</td><td class="DESC">Dead initialization</td><td>src/desktop.c</td><td class="DESC">input_inhibit_deactivate</td><td class="Q">371</td><td class="Q">1</td><td><a href="report-60ec0d.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-60ec0d.html" -->
+</tr>
+<tr class="bt_unused_code_dead_initialization"><td class="DESC">Unused code</td><td class="DESC">Dead initialization</td><td>src/virtual.c</td><td class="DESC">phoc_handle_virtual_keyboard</td><td class="Q">18</td><td class="Q">1</td><td><a href="report-b09871.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-b09871.html" -->
+</tr>
+<tr class="bt_memory_error_memory_leak"><td class="DESC">Memory error</td><td class="DESC">Memory leak</td><td>tests/testlib.c</td><td class="DESC">phoc_test_client_capture_frame</td><td class="Q">547</td><td class="Q">16</td><td><a href="report-98a39c.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-98a39c.html" -->
+</tr>
+<tr class="bt_logic_error_uninitialized_argument_value"><td class="DESC">Logic error</td><td class="DESC">Uninitialized argument value</td><td>src/desktop.c</td><td class="DESC">handle_pointer_constraint</td><td class="Q">433</td><td class="Q">21</td><td><a href="report-41aaa1.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-41aaa1.html" -->
+</tr>
+<tr class="bt_logic_error_uninitialized_argument_value"><td class="DESC">Logic error</td><td class="DESC">Uninitialized argument value</td><td>src/cursor.c</td><td class="DESC">phoc_cursor_handle_touch_motion</td><td class="Q">793</td><td class="Q">17</td><td><a href="report-afbee5.html#EndPath">View Report</a></td>
+<!-- REPORTBUG id="report-afbee5.html" -->
+</tr>
+</tbody>
+</table>
+
+</body></html>
